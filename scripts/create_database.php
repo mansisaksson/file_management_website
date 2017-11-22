@@ -2,6 +2,8 @@
 require_once dirname(__DIR__).'/header.php';
 require_once FP_SCRIPTS_DIR.'globals.php';
 
+// TODO: Right now anyone can call this, need to implement some form of authentication
+
 // Create connection
 $conn = new mysqli(Globals::SQL_SERVERNAME, Globals::SQL_USERNAME, Globals::SQL_PASSWORD);
 if ($conn->connect_error) {
@@ -45,7 +47,7 @@ function endScript($error, $sqlConnection)
 {
     if ($error === "")
     {
-        HelperFunctions::GoToRetPage();
+        HelperFunctions::goToRetPage();
     }
     else
     {

@@ -48,7 +48,7 @@ if (isset($conn))
             die("Failed to insert file into db: " . $conn->error);
         
         $conn->close();
-        HelperFunctions::GoToRetPage();
+        HelperFunctions::goToRetPage();
     }
 }
 
