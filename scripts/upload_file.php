@@ -4,10 +4,6 @@ require_once FP_SCRIPTS_DIR.'globals.php';
 
 $fileToUpload = "fileToUpload";
 
-if(isset($_POST["submit"]) === false) {
-    die ("No File specified");
-}
-
 $conn = HelperFunctions::createConnectionToFileTable();
 
 if (isset($conn))
@@ -48,20 +44,24 @@ if (isset($conn))
             die("Failed to insert file into db: " . $conn->error);
         
         $conn->close();
-        HelperFunctions::goToRetPage();
     }
 }
 
 function tryUploadFile($fileToUpload, $target_file)
 {
-    // Check if file already exists
-    if (file_exists(FP_UPLOADS_DIR . $target_file)) {
-        echo "Sorry, file already exists." . "<br>";
+    if (isset($_FILES[$fileToUpload]) === false) {
+        echo "Not a valid File" . "<br>";
         return false;
     }
     
-    if ($_FILES["fileToUpload"]["size"] <= 0) {
+    if ($_FILES[$fileToUpload]["size"] <= 0) {
         echo "Not a valid File" . "<br>";
+        return false;
+    }
+    
+    // Check if file already exists
+    if (file_exists(FP_UPLOADS_DIR . $target_file)) {
+        echo "Sorry, file already exists." . "<br>";
         return false;
     }
     

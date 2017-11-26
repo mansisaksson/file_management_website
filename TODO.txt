@@ -1,0 +1,8 @@
+[x] Java script upload file
+[ ] Download large files (I get out of memory errors atm)
+[ ] Fix up SQL injeqtion
+
+[ ] Copy download link to clippboard
+[ ] Limit file download times/One time URLs
+
+[ ] Admin tools/login

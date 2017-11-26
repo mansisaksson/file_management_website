@@ -27,6 +27,8 @@ if (isset($_GET["fileID"]))
                     header("Content-Type: application/octet-stream");
                     header("Content-Transfer-Encoding: Binary");
                     header("Content-disposition: attachment; filename=\"".$row["file_name"]."\"");
+                    ob_clean();
+                    flush();
                     readfile($file_url);
                 }
                 else 
