@@ -3,49 +3,39 @@ require_once dirname(__DIR__).'/header.php';
 require_once FP_SCRIPTS_DIR.'globals.php';
 
 $fileToUpload = "fileToUpload";
+if (isset($_FILES[$fileToUpload]) === false){
+    die ("No file specifiled");
+}
 
 $conn = HelperFunctions::createConnectionToFileTable();
+if (isset($conn) === false) {
+    die ("Failed to establish connection to SQL Database");
+}
 
-if (isset($conn))
+$file_name = basename($_FILES[$fileToUpload]["name"]);
+$target_file = uniqid();
+
+if (tryUploadFile($fileToUpload, $target_file))
 {
-    $target_file = uniqid();
+    $query = "INSERT INTO ".Globals::SQL_FILE_TABLE
+    ." (id, file_name, description, download_count, download_limit)"
+    ." VALUES (?, ?, 'DEFAULT_DESCRIPTION', '0', '-1')";
     
-    if (tryUploadFile($fileToUpload, $target_file))
+    if ($stmt = $conn->prepare($query))
     {
-        //TODO: This is dangerous, you could potentially have a dangerous filename/description, need to sanitize this
-        /* //create a prepared statement
-            if ($stmt = $mysqli->prepare("SELECT District FROM City WHERE Name=?")) {
-            
-                //bind parameters for markers
-                $stmt->bind_param("s", $city);
-            
-                //execute query
-                $stmt->execute();
-            
-                //bind result variables
-                $stmt->bind_result($district);
-            
-                //fetch value
-                $stmt->fetch();
-            
-                printf("%s is in district %s\n", $city, $district);
-            
-                close statement
-                $stmt->close();
-            } */
-        $sql = "INSERT INTO ".Globals::SQL_FILE_TABLE." (id, file_name, description, download_count, download_limit)"
-            ."VALUES ('".$target_file."'
-            , '".basename($_FILES[$fileToUpload]["name"])."'
-            , 'DEFAULT_DESCRIPTION'
-            , '0'
-            , '-1')";
-        
-        if ($conn->query($sql) !== TRUE)
+        $stmt->bind_param("ss", $target_file, $file_name);
+        if (!$stmt->execute()) {
             die("Failed to insert file into db: " . $conn->error);
+        }
         
-        $conn->close();
+        $stmt->close();
+    }
+    else {
+        die ("Invalid SQL statement");
     }
 }
+
+$conn->close();
 
 function tryUploadFile($fileToUpload, $target_file)
 {

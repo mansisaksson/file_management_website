@@ -39,6 +39,7 @@ tr:nth-child(even) {
 $conn = HelperFunctions::createConnectionToFileTable();
 if (isset($conn))
 {
+    // TODO: Do I need to do prepared statments here? I sholdn't have to since we're not handling user data
     $sql = "SELECT * FROM ".Globals::SQL_FILE_TABLE;
     $result = $conn->query($sql);
     
