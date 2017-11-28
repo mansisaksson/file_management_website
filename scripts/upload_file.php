@@ -7,7 +7,7 @@ if (isset($_FILES[$fileToUpload]) === false){
     die ("No file specifiled");
 }
 
-$conn = HelperFunctions::createConnectionToFileTable();
+$conn = HelperFunctions::createConnectionToDB();
 if (isset($conn) === false) {
     die ("Failed to establish connection to SQL Database");
 }
@@ -17,7 +17,7 @@ $target_file = uniqid();
 
 if (tryUploadFile($fileToUpload, $target_file))
 {
-    $query = "INSERT INTO ".Globals::SQL_FILE_TABLE
+    $query = "INSERT INTO ".SQL::FILE_TABLE
     ." (id, file_name, description, download_count, download_limit)"
     ." VALUES (?, ?, 'DEFAULT_DESCRIPTION', '0', '-1')";
     

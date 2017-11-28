@@ -11,12 +11,12 @@ if (!file_exists(FP_UPLOADS_DIR.$fileID)) {
     die("That file does not exist");
 }
 
-$conn = HelperFunctions::createConnectionToFileTable();
+$conn = HelperFunctions::createConnectionToDB();
 if (!isset($conn)) {
     die ("Failed to establish connection to database");
 }
 
-$sql_query = "SELECT * FROM ".Globals::SQL_FILE_TABLE." WHERE id=?";
+$sql_query = "SELECT * FROM ".SQL::FILE_TABLE." WHERE id=?";
 $stmt = $conn->prepare($sql_query);
 if (!$stmt) {
     die ("Invalid SQL statement". $conn->error);

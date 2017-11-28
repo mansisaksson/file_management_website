@@ -4,10 +4,10 @@ require_once FP_SCRIPTS_DIR . 'helper_functions.php';
 ?>
 
 <?php 
-$db_query = "tables=".SQL::FILE_TABLE . "&return=".HelperFunctions::getReturnAddr();
+$db_query = "tables=".SQL::USERS_TABLE. "&return=".HelperFunctions::getReturnAddr();
 ?>
 <form action="scripts/create_database.php?<?php echo $db_query ?>" method="post" enctype="multipart/form-data">
-	<input type="submit" class="button" value="Clear Files" name="GenerateDB">
+	<input type="submit" class="button" value="Clear Users" name="GenerateDB">
 </form>
 
 <style>
@@ -30,35 +30,24 @@ tr:nth-child(even) {
 
 <table style="width:100%">
   <tr>
-    <th>Download</th>
     <th>id</th>
     <th>Name</th>
-    <th>Description</th>
-    <th>Download Count</th>
-    <th>Download Limit</th>
+    <th>Password</th>
   </tr>
 <?php
 $conn = HelperFunctions::createConnectionToDB();
 if (isset($conn))
 {
-    // TODO: Do I need to do prepared statments here? I sholdn't have to since we're not handling user data
-    $sql = "SELECT * FROM ".SQL::FILE_TABLE;
+    $sql = "SELECT * FROM ".SQL::USERS_TABLE;
     $result = $conn->query($sql);
     
     if ($result !== false && $result->num_rows > 0) {
         while($row = $result->fetch_assoc()) 
         {
-            ?><tr>
-            <th>
-            <form action="<?php echo RP_SCRIPTS_DIR; ?>download_file.php">
-            	<button type="submit" value="<?php echo $row["id"]; ?>" name="fileID">Download</button>
-            </form>
-            </th> <?php
+            ?><tr><?php
             echo "<th>" . $row["id"] . "</th>";
-            echo "<th>" . $row["file_name"] . "</th>";
-            echo "<th>" . $row["description"] . "</th>";
-            echo "<th>" . $row["download_count"] . "</th>";
-            echo "<th>" . $row["download_limit"] . "</th>";
+            echo "<th>" . $row["user_name"] . "</th>";
+            echo "<th>" . $row["password"] . "</th>";
             ?></tr><?php
         }
     } 

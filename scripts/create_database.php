@@ -4,56 +4,64 @@ require_once FP_SCRIPTS_DIR.'globals.php';
 
 // TODO: Right now anyone can call this, need to implement some form of authentication
 
+if (!isset($_GET['tables'])){
+    die ("No tables selected");
+}
+
+$tablesID = $_GET['tables'];
+
 // Create connection
-$conn = new mysqli(Globals::SQL_SERVERNAME, Globals::SQL_USERNAME, Globals::SQL_PASSWORD);
+$conn = new mysqli(SQL::SERVERNAME, SQL::USERNAME, SQL::PASSWORD);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Create database
-$sql = "DROP DATABASE ".Globals::SQL_FILE_DATABASE;
-if ($conn->query($sql) !== TRUE) {
-    echo "Error deleing database: " . $conn->error;
-}
-
-// Create database
-$sql = "CREATE DATABASE ".Globals::SQL_FILE_DATABASE;
-if ($conn->query($sql) !== TRUE) {
-    endScript("Error creating database: " . $conn->error, $conn);
-}
-
 // Open Database
-$sql = "USE ".Globals::SQL_FILE_DATABASE;
+$sql = "USE ".SQL::DATABASE;
 if ($conn->query($sql) !== TRUE) {
-    endScript("Error creating table: " . $conn->error, $conn);
+    echo "Could not find database, creating... </br>";
+ 
+    // Create database
+    $sql = "CREATE DATABASE ".SQL::DATABASE;
+    if ($conn->query($sql) !== TRUE) {
+        die("Error creating database: " . $conn->error);
+    }
+    
+    $conn->query("USE ".SQL::DATABASE);
 }
 
-// Create Tables
-$sql = "CREATE TABLE ".Globals::SQL_FILE_TABLE." (
+// Create File Table
+if ($tablesID === SQL::FILE_TABLE || $tablesID === "all")
+{
+    $conn->query("DROP TABLE ".SQL::FILE_TABLE);
+    $sql = "CREATE TABLE ".SQL::FILE_TABLE." (
     id VARCHAR(256) PRIMARY KEY,
     file_name VARCHAR(256) NOT NULL,
     description TEXT NOT NULL,
     download_count INT(6) DEFAULT 0,
     download_limit INT(6) DEFAULT -1
-)";
-
-if ($conn->query($sql) === TRUE) {
-    endScript("Error creating table: " . $conn->error, $conn);
-}
-
-endScript("", $conn);
-
-function endScript($error, $sqlConnection)
-{
-    if ($error === "")
-    {
-        HelperFunctions::goToRetPage();
-    }
-    else
-    {
-        echo $error;
-    }
+    )";
     
-    $sqlConnection->close();
+    if ($conn->query($sql) !== TRUE) {
+        die("Error creating file table " . $conn->error);
+    }
 }
+
+// Create User Table
+if ($tablesID === SQL::USERS_TABLE || $tablesID === "all")
+{
+    $conn->query("DROP TABLE ".SQL::USERS_TABLE);
+    $sql = "CREATE TABLE ".SQL::USERS_TABLE." (
+        id VARCHAR(256) PRIMARY KEY,
+        user_name VARCHAR(256) NOT NULL,
+        password VARCHAR(256) NOT NULL
+    )";
+    
+    if ($conn->query($sql) !== TRUE) {
+        die("Error creating user table " . $conn->error);
+    }
+}
+
+$conn->close();
+HelperFunctions::goToRetPage();
 ?>
