@@ -39,28 +39,5 @@ class HelperFunctions
     {
         return basename($_SERVER['REQUEST_URI']);
     }
-    
-    public static function updateUserSession($username)
-    {
-        $conn = HelperFunctions::createConnectionToDB();
-        
-        // Update our session
-        $stmt = $conn->prepare("SELECT id FROM ".SQL::USERS_TABLE." WHERE user_name = ?");
-        $stmt->bind_param('s', $username);
-        $stmt->execute();
-        
-        $id = $stmt->get_result();
-        $stmt->close();
-        $conn->close();
-        
-        if (!isset($id)){
-            echo ("Could not retrive user data from database");
-            return false;
-        }
-        
-        $_SESSION[Session::USER_NAME] = $username;
-        $_SESSION[Session::USER_ID] = $id;
-        return true;
-    }
 };
 ?>

@@ -1,5 +1,6 @@
 <?php
 require_once dirname(__DIR__).'/header.php';
+require_once FP_SCRIPTS_DIR . 'session.php';
 require_once FP_SCRIPTS_DIR . 'helper_functions.php';
 
 class SQL
@@ -12,11 +13,5 @@ class SQL
     const DATABASE = "mi_ws_db";
     const FILE_TABLE = "files";
     const USERS_TABLE = "users";
-}
-
-class Session
-{
-    const USER_NAME = "user_name";
-    const USER_ID = "user_id";
 }
 ?>

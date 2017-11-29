@@ -5,6 +5,12 @@ require_once FP_SCRIPTS_DIR . 'helper_functions.php';
 
 <?php 
 $db_query = "tables=".SQL::USERS_TABLE. "&return=".HelperFunctions::getReturnAddr();
+
+$session = Session::getInstance();
+if ($session->UserName() !== null)
+{
+    echo "Current User: ".$session->UserName()."<br>";
+}
 ?>
 <form action="scripts/create_database.php?<?php echo $db_query ?>" method="post" enctype="multipart/form-data">
 	<input type="submit" class="button" value="Clear Users" name="GenerateDB">
