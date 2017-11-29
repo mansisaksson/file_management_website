@@ -37,10 +37,10 @@ div#footer-menu {
 	margin-top: 5px;
 	background-color:rgba(23,23,23,0.6);
 	
-	-moz-border-radius: 20px;
-    -webkit-border-radius: 20px;
-    -khtml-border-radius: 20px;
-    border-radius: 20px 20px 20px 20px;
+	-moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    border-radius: 5px 5px 5px 5px;
 }
 
 div#footer-menu li {
@@ -65,10 +65,10 @@ div#footer-menu-dropdown {
 	margin-top: 10px;
 	background-color:rgba(23,23,23,0.6);
 	
-	-moz-border-radius: 20px;
-    -webkit-border-radius: 20px;
-    -khtml-border-radius: 20px;
-    border-radius: 20px 20px 20px 20px;
+	-moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    border-radius: 5px 5px 5px 5px;
 }
 
 .footer-text li {

@@ -2,26 +2,13 @@
 /* CSS Document */
 
 body {
-	background-color:#000;
-
+	background-color: #d0d0d0;
 	margin:0px;
     padding:0px;
 }
 
 input {
     font-family: sans-serif;                
-}
-
-div#background-image {
-	position:fixed;
-	z-index: -3;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 2285px;
-	background-image:url(../resources/scrolling-background.png);
-	background-repeat:no-repeat;
-	background-position: center top;
 }
 
 div#background-stripes {
@@ -61,13 +48,6 @@ header#top-header {
 	   -moz-box-shadow: 0px -5px 20px #000;
 			box-shadow: 0px -5px 20px #000;
 
-}
-
-div#facebook-icon {
-	height:50px;
-	width:50px;	
-	float:right;
-	margin-top:5px;
 }
 
 section#container {

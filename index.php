@@ -18,11 +18,12 @@ require_once "header.php";
 		</div>
 	</header>
 
+
 	<header id="top-header">
 		<!-- Nothing Here -->
 	</header>
 
-	<?php require_once FP_CONTENT_DIR."top_nav_menu.html"; ?>
+	<?php require_once FP_CONTENT_DIR."top_nav_menu.php"; ?>
 
 	<section id="container">
 		<div id="content">
@@ -41,7 +42,10 @@ require_once "header.php";
     		}
     		else
     		{
-    		    require FP_CONTENT_DIR."upload_file_form.php"; // TODO: actual front page
+    		    ?>
+    		    <p>Best webbsite in da world</p>
+    		    <?php
+    		    //require FP_CONTENT_DIR."upload_file_form.php"; // TODO: actual front page
     		}
     		?>
     	</div>
@@ -49,7 +53,6 @@ require_once "header.php";
 
 	<?php require "content/footer.html"; ?>
 	
-	<div id="background-image"></div>
 	<div id="background-stripes"></div>
 </body>
 </html>

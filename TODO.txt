@@ -3,6 +3,9 @@
 [x] Fix up SQL injection
 
 [ ] Admin tools/login
+	[ ] Login validation
+	[ ] User privilege check
+	
 [ ] Upload date
 
 [ ] Limit file download times/One time URLs
