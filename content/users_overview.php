@@ -18,7 +18,6 @@ $db_query = "tables=".SQL::USERS_TABLE. "&return=".HelperFunctions::getReturnAdd
 <form action="scripts/create_database.php?<?php echo $db_query ?>" method="post" enctype="multipart/form-data">
 	<input type="submit" class="button" value="Clear Users" name="GenerateDB">
 </form>
-
 <?php
 printUsers();
 
@@ -38,13 +37,13 @@ function printUsers()
             width: 100%;
         }
         
-        td, th {
+        #usersTable td, th {
             border: 1px solid #dddddd;
             text-align: left;
             padding: 8px;
         }
         
-        tr:nth-child(even) {
+        #usersTable tr:nth-child(even) {
             background-color: #dddddd;
         }
     </style>

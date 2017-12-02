@@ -4,6 +4,11 @@ require_once FP_SCRIPTS_DIR . 'globals.php';
 
 class HelperFunctions
 {
+    public static function getDownloadURL($fileID)
+    {
+        return $_SERVER['SERVER_NAME'].RP_MAIN_DIR."download.php?fileID=".$fileID;
+    }
+    
     public static function goToRetPage()
     {
         $returnID = "return";
@@ -49,6 +54,35 @@ class HelperFunctions
         }
         
         return false;
+    }
+    
+    function createNewUserSession($username)
+    {
+        $conn = HelperFunctions::createConnectionToDB();
+        if (!isset($conn)) {
+            return false;
+        }
+        
+        // Update our session
+        $esc_username = $conn->escape_string($username);
+        $stmt = $conn->prepare("SELECT id FROM ".SQL::USERS_TABLE." WHERE user_name = ?");
+        $stmt->bind_param('s', $esc_username);
+        $stmt->execute();
+        
+        $result = $stmt->get_result();
+        $stmt->close();
+        $conn->close();
+        
+        if ($result === false || $result->num_rows <= 0){
+            echo ("Could not retrive user data from database. <br>");
+            return false;
+        }
+        
+        $id = $result->fetch_row()[0];
+        $session = Session::createNewSession();
+        $session->SetUserName($username);
+        $session->SetUserID($id);
+        return true;
     }
 };
 ?>
