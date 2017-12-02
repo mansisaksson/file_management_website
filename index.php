@@ -12,12 +12,7 @@ require_once "header.php";
 </head>
 
 <body>
-	<header id="top-bar">
-		<div id="top-menu"> 
-			<?php require "content/login_dropdown.html"; ?> 
-		</div>
-	</header>
-
+	<?php require "content/scrolling_header.php"; ?> 
 
 	<header id="top-header">
 		<!-- Nothing Here -->

@@ -2,7 +2,10 @@
 require_once dirname(__DIR__).'/header.php';
 require_once FP_SCRIPTS_DIR.'globals.php';
 
-// TODO: Right now anyone can call this, need to implement some form of authentication
+// Check user permissions
+if (!HelperFunctions::hasAuthority()) {
+    die ("Insufficient permissions");
+}
 
 if (!isset($_GET['tables'])){
     die ("No tables selected");
@@ -35,11 +38,11 @@ if ($tablesID === SQL::FILE_TABLE || $tablesID === "all")
 {
     $conn->query("DROP TABLE ".SQL::FILE_TABLE);
     $sql = "CREATE TABLE ".SQL::FILE_TABLE." (
-    id VARCHAR(256) PRIMARY KEY,
-    file_name VARCHAR(256) NOT NULL,
-    description TEXT NOT NULL,
-    download_count INT(6) DEFAULT 0,
-    download_limit INT(6) DEFAULT -1
+        id VARCHAR(256) PRIMARY KEY,
+        file_name VARCHAR(256) NOT NULL,
+        description TEXT NOT NULL,
+        download_count INT(6) DEFAULT 0,
+        download_limit INT(6) DEFAULT -1
     )";
     
     if ($conn->query($sql) !== TRUE) {

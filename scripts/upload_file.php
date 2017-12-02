@@ -2,6 +2,11 @@
 require_once dirname(__DIR__).'/header.php';
 require_once FP_SCRIPTS_DIR.'globals.php';
 
+// Check user permissions
+if (!HelperFunctions::hasAuthority()) {
+    die ("Insufficient permissions");
+}
+
 $fileToUpload = "fileToUpload";
 if (isset($_FILES[$fileToUpload]) === false){
     die ("No file specifiled");

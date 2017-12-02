@@ -39,5 +39,16 @@ class HelperFunctions
     {
         return basename($_SERVER['REQUEST_URI']);
     }
+    
+    public static function hasAuthority()
+    {
+        $session = Session::getInstance();
+        if ($session->UserName() !== null)
+        {
+            return true;
+        }
+        
+        return false;
+    }
 };
 ?>

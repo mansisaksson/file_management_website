@@ -7,21 +7,26 @@ require_once FP_SCRIPTS_DIR . 'globals.php';
 
 <nav id="top-nav">
 	<ul id="menu">
-		<li><a href="index.php?content=upload_file_form.php" class="no_drop">Upload File</a></li>
-		<li><a href="index.php?content=file_overview.php" class="no_drop">File Overview</a></li>
-		<li><a href="index.php?content=users_overview.php" class="no_drop">Users Overview</a></li>
-		<li><a href="index.php?content=register_user_form.php" class="no_drop">Register User</a></li>
+
 		<?php
 		$session = Session::getInstance();
 		if ($session->UserName() !== null)
 		{
-		    $script_url = RP_SCRIPTS_DIR."logout.php";
-		    echo "<li><a href=\"".$script_url."\" class=\"no_drop\">Logout</a></li>";
+		    ?>
+		    <li><a href="index.php?content=upload_file_form.php" class="no_drop">Upload File</a></li>
+			<li><a href="index.php?content=file_overview.php" class="no_drop">File Overview</a></li>
+			<li><a href="index.php?content=users_overview.php" class="no_drop">Users Overview</a></li>
+			<li><a href="<?php echo RP_SCRIPTS_DIR."logout.php"; ?>" class="no_drop">Logout</a></li>
+		    <?php 
 		}
 		else
 		{
-		    $script_url = RP_MAIN_DIR."index.php?content=login_form.php";
-		    echo "<li><a href=\"".$script_url."\" class=\"no_drop\">Login</a></li>";
+		    $login_url = RP_MAIN_DIR."index.php?content=login_form.php";
+		    $register_url = RP_MAIN_DIR."index.php?content=register_user_form.php";
+		    ?>
+		    <li><a href="<?php echo $register_url; ?>" class="no_drop">Register User</a></li>
+		    <li><a href="<?php echo $login_url; ?>" class="no_drop">Login</a></li>
+		    <?php 
 		}
 		?>
 	</ul>

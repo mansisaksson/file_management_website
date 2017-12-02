@@ -13,5 +13,6 @@ class SQL
     const DATABASE = "mi_ws_db";
     const FILE_TABLE = "files";
     const USERS_TABLE = "users";
+    const PERMISSIONS_TABLE = "permission_groups";
 }
 ?>
