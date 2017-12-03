@@ -22,7 +22,7 @@ if (!password_verify($password, $hashed_password)) {
 
 // Create user session
 if (createNewUserSession($username)) {
-    header("Location: ".RP_MAIN_DIR."index.php?content=users_overview.php");
+    header("Location: ".RP_MAIN_DIR."index.php?content=user_overview.php");
 }
 else {
     echo "Failed to create user session";
@@ -39,14 +39,15 @@ function createNewUserSession($username)
     $stmt->bind_param('s', $esc_username);
     $stmt->execute();
     
-    $id = $stmt->get_result();
+    $result = $stmt->get_result();
     $stmt->close();
     $conn->close();
     
-    if (!isset($id)){
-        echo ("Could not retrive user data from database");
+    if ($result === false || $result->num_rows <= 0){
+        echo "Could not retrive user data from database. <br>";
         return false;
     }
+    $id = $result->fetch_row()[0];
     
     $session = Session::createNewSession();
     $session->SetUserName($esc_username);

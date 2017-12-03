@@ -7,6 +7,12 @@ if (!HelperFunctions::hasAuthority()) {
     die ("Insufficient permissions");
 }
 
+$session = Session::getInstance();
+if ($session->UserName() === null) {
+    echo ("No User Logged In");
+    return;
+}
+
 $fileToUpload = "fileToUpload";
 if (isset($_FILES[$fileToUpload]) === false){
     die ("No file specifiled");
@@ -20,24 +26,8 @@ if (isset($conn) === false) {
 $file_name = basename($_FILES[$fileToUpload]["name"]);
 $target_file = uniqid();
 
-if (tryUploadFile($fileToUpload, $target_file))
-{
-    $query = "INSERT INTO ".SQL::FILE_TABLE
-    ." (id, file_name, description, download_count, download_limit)"
-    ." VALUES (?, ?, 'DEFAULT_DESCRIPTION', '0', '-1')";
-    
-    if ($stmt = $conn->prepare($query))
-    {
-        $stmt->bind_param("ss", $target_file, $file_name);
-        if (!$stmt->execute()) {
-            die("Failed to insert file into db: " . $conn->error);
-        }
-        
-        $stmt->close();
-    }
-    else {
-        die ("Invalid SQL statement");
-    }
+if (tryUploadFile($fileToUpload, $target_file)) {   
+    Database::addUserFile($session->UserID(), $target_file, $file_name);
 }
 
 $conn->close();

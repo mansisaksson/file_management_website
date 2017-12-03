@@ -1,4 +1,6 @@
 <?php
+require_once dirname(__DIR__).'/header.php';
+
 class Session
 {
     const SESSION_STARTED = TRUE;
@@ -23,7 +25,7 @@ class Session
     
     public function UserID()
     {
-        return isset(self::$instance) ? self::$instance->iserID : null;
+        return isset(self::$instance) ? self::$instance->userID : null;
     }
     
     public function SetUserID($userID)

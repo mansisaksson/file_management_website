@@ -16,7 +16,7 @@ if (!isset($conn)) {
     die ("Failed to establish connection to database");
 }
 
-$sql_query = "SELECT * FROM ".SQL::FILE_TABLE." WHERE id=?";
+$sql_query = "SELECT * FROM ".SQL::GLOBAL_FILE_TABLE." WHERE id=?";
 $stmt = $conn->prepare($sql_query);
 if (!$stmt) {
     die ("Invalid SQL statement". $conn->error);

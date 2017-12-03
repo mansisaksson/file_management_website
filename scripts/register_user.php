@@ -24,7 +24,7 @@ if (!Database::createNewUser(uniqid(), $username, $password)) {
 }
 
 if (HelperFunctions::createNewUserSession($username)) {
-    header("Location: ".RP_MAIN_DIR."index.php?content=users_overview.php");
+    header("Location: ".RP_MAIN_DIR."index.php?content=user_overview.php");
 }
 else {
     echo "Failed to create user session";

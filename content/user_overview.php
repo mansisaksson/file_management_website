@@ -2,33 +2,26 @@
 require_once dirname(__DIR__).'/header.php';
 require_once FP_SCRIPTS_DIR . 'helper_functions.php';
 
-// Check user permissions
-if (!HelperFunctions::hasAuthority()) {
-    echo ("Insufficient permissions");
+$session = Session::getInstance();
+if ($session->UserName() === null) {
+    echo ("No User Logged In");
     return;
 }
 
-$searchQuerry = "";
-if (isset($_POST['search_query'])) {
-    $searchQuerry = $_POST['search_query'];
-}
+echo "User Name: ".$session->UserName()."<br>";
+echo "User ID: ".$session->UserID()."<br>";
+echo "<br>";
 
-$db_query = "tables=".SQL::GLOBAL_FILE_TABLE . "&return=".HelperFunctions::getReturnAddr();
 ?>
-<form action="scripts/create_database.php?<?php echo $db_query ?>" method="post" enctype="multipart/form-data">
-	<input type="submit" class="button" value="Clear Files" name="GenerateDB">
+<form action="" method="post" enctype="multipart/form-data">
+	<input type="submit" class="button" value="Delete User" name="delete_user">
 </form>
-<br>
 
-<form action=<?php echo RP_MAIN_DIR."index.php?content=file_overview.php" ?> method="post" enctype="multipart/form-data">
-    <input class="js-copytextarea" name="search_query" value=<?php echo $searchQuerry; ?>>
-    <button type="submit">Search</button>
-</form>
 <?php
+echo "My Files <br>";
+printUserFiles($session->UserID(), "");
 
-printFiles($searchQuerry);
-
-function printFiles($searchQuery)
+function printUserFiles($userID, $searchQuery)
 {
     $conn = HelperFunctions::createConnectionToDB();
     if (!isset($conn)) {
@@ -37,11 +30,12 @@ function printFiles($searchQuery)
     }
     
     $esc_query = "%".$conn->escape_string($searchQuery)."%";
-    $stmt = $conn->prepare("SELECT * FROM ".SQL::GLOBAL_FILE_TABLE." WHERE file_name LIKE ?");
+    $stmt = $conn->prepare("SELECT * FROM ".SQL::USER_FILES_TABLE.$userID." WHERE file_name LIKE ?");
     if (!$stmt) {
-        echo "Faild to locate file table";
+        echo "Could not find user files. <br>";
         return;
     }
+    
     $stmt->bind_param('s', $esc_query);
     if (!$stmt->execute()) {
         echo "File Seach Error: ".$stmt->error."<br>";
@@ -83,28 +77,27 @@ function printFiles($searchQuery)
         <th>Name</th>
         <th>Description</th>
         <th>Download Count</th>
-        <th>Owner</th>
       </tr>
     <?php
     
     while($row = $result->fetch_assoc()) 
     {
+        $fileID = $row["file_id"];
         ?>
         <tr>
 		<th>
 			<form action="<?php echo RP_SCRIPTS_DIR; ?>download_file.php">
-            	<button type="submit" value="<?php echo $row["id"]; ?>" name="fileID">Download</button>
+            	<button type="submit" value="<?php echo $fileID; ?>" name="fileID">Download</button>
             </form>
         </th>
         
         <th>
-       		<input class="js-copytextarea" value =<?php echo HelperFunctions::getDownloadURL($row["id"]); ?>>
+       		<input class="js-copytextarea" value =<?php echo HelperFunctions::getDownloadURL($fileID); ?>>
         </th>
         <?php
         echo "<th>" . $row["file_name"] . "</th>";
-        echo "<th>" . $row["description"] . "</th>";
+        echo "<th>" . $row["file_description"] . "</th>";
         echo "<th>" . $row["download_count"] . "</th>";
-        echo "<th>" . Database::getUserName($row["file_owner"]) . "</th>";
         ?></tr><?php
     }
     ?></table><?php 
