@@ -18,19 +18,22 @@ if (isset($_FILES[$fileToUpload]) === false){
     die ("No file specifiled");
 }
 
-$conn = HelperFunctions::createConnectionToDB();
-if (isset($conn) === false) {
-    die ("Failed to establish connection to SQL Database");
+//Get form information
+$password = $_POST['password'];
+$password_conf = $_POST['confirm_password'];
+$public = isset($_POST['isPublic']) ? 1 : 0;
+
+// Check password validity
+if ($password !== $password_conf){
+    die ("Password missmatch");
 }
 
 $file_name = basename($_FILES[$fileToUpload]["name"]);
 $target_file = uniqid();
 
 if (tryUploadFile($fileToUpload, $target_file)) {   
-    Database::addUserFile($session->UserID(), $target_file, $file_name);
+    Database::addUserFile($session->UserID(), $target_file, $file_name, $password, $public);
 }
-
-$conn->close();
 
 function tryUploadFile($fileToUpload, $target_file)
 {

@@ -1,14 +1,17 @@
 [x] Java script upload file
 [x] Download large files (I get out of memory errors atm)
 [x] Fix up SQL injection
+[x] Copy download link to clippboard
 
-[ ] Admin tools/login
+[x] Admin tools/login
 	[x] Login validation
-	[ ] User privilege check
-	
-[ ] Upload date
 
-[ ] Limit file download times/One time URLs
-[ ] Copy download link to clippboard
-[ ] Download log (Good to keep track of who downloads what)
-[ ] Upload %
+[ ] File download permissions
+	[x] File password	
+	[ ] One time URLs
+
+[ ] Upate download script
+	[ ] include public/private flags
+	[ ] password protection
+
+[ ] Limit register user

@@ -9,11 +9,19 @@ if (!HelperFunctions::hasAuthority()) {
 }
 ?>
 
-<form enctype="multipart/form-data" id = "fileForm">
-    <input type="file" name="fileToUpload" id="fileToUpload" />
-    <input type="button" value="Upload" />
+<form enctype="multipart/form-data" method="post" name="fileForm">
+    <input type="file" name="fileToUpload" /> <br><br>
+    <label>File Password:</label><br>
+    <input type="password" name="password" /> <br>
+    <label>Confirm Password:</label><br>
+    <input type="password" name="confirm_password" /> <br>
+    
+    <input type="checkbox" name="isPublic" value="0">
+    <label>Public</label> <br><br>
 </form>
-<progress value="0" max="100"></progress>
+
+<progress value="0" max="100"></progress> <br>
+<input type="button" value="Upload" /> 
 
 <p id="uploadReturn"></p>
 

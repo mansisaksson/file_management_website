@@ -75,7 +75,10 @@ function printUserFiles($userID, $searchQuery)
       	<th>Download</th>
       	<th>URL</th>
         <th>Name</th>
-        <th>Description</th>
+        <th>Type</th>
+        <!-- <th>Description</th> -->
+        <th>Password Protected</th>
+        <th>Public</th>
         <th>Download Count</th>
       </tr>
     <?php
@@ -95,8 +98,14 @@ function printUserFiles($userID, $searchQuery)
        		<input class="js-copytextarea" value =<?php echo HelperFunctions::getDownloadURL($fileID); ?>>
         </th>
         <?php
+        $hasPassword = $row["file_password"] === "" ? "false" : "true";
+        $isPublic = $row["public"] === 0 ? "false" : "true";
+        
         echo "<th>" . $row["file_name"] . "</th>";
-        echo "<th>" . $row["file_description"] . "</th>";
+        echo "<th>" . $row["file_type"] . "</th>";
+        //echo "<th>" . $row["file_description"] . "</th>";
+        echo "<th>" . $hasPassword . "</th>";
+        echo "<th>" . $isPublic . "</th>";
         echo "<th>" . $row["download_count"] . "</th>";
         ?></tr><?php
     }

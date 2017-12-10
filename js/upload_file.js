@@ -11,9 +11,10 @@ $(':file').on('change', function()
 
 $(':button').on('click', function() 
 {
-	var file_data = $('#fileToUpload').prop('files')[0];   
-	var form_data = new FormData();                  
-	form_data.append('fileToUpload', file_data);
+	var formElement = document.forms.namedItem("fileForm");
+	var form_Data = new FormData(formElement);
+	//var file_data = $('#fileToUpload').prop('files')[0];   
+	//form_Data.append('fileToUpload', file_data);
 	
     $.ajax
     ({
@@ -22,7 +23,7 @@ $(':button').on('click', function()
         type: 'POST',
 
         // Form data
-        data: form_data,
+        data: form_Data,
 
         // Tell jQuery not to process data or worry about content-type
         // You *must* include these options!

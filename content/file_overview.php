@@ -81,8 +81,6 @@ function printFiles($searchQuery)
       	<th>Download</th>
       	<th>URL</th>
         <th>Name</th>
-        <th>Description</th>
-        <th>Download Count</th>
         <th>Owner</th>
       </tr>
     <?php
@@ -102,8 +100,6 @@ function printFiles($searchQuery)
         </th>
         <?php
         echo "<th>" . $row["file_name"] . "</th>";
-        echo "<th>" . $row["description"] . "</th>";
-        echo "<th>" . $row["download_count"] . "</th>";
         echo "<th>" . Database::getUserName($row["file_owner"]) . "</th>";
         ?></tr><?php
     }

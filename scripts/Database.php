@@ -150,21 +150,27 @@ class Database
         return true;
     }
     
-    static function addUserFile($userID, $fileID, $file_name)
+    static function addUserFile($userID, $fileID, $file_name, $password, $public)
     {
         $conn = HelperFunctions::createConnectionToDB();
         if (!isset($conn)) {
             return false;
         }
         
-        $esc_file_name = $conn->escape_string($file_name);
+        $file_type = pathinfo($file_name, PATHINFO_EXTENSION);
+        $esc_file_name = $conn->escape_string(pathinfo($file_name, PATHINFO_FILENAME));
+        
+        $hashed_password = "";
+        if ($password !== "")
+            $hashed_password = password_hash($password, PASSWORD_BCRYPT, array('cost' => 12));
+        
         Database::createGlobalFileTable($conn, false);
         Database::createUserFileTable($conn, $userID, false);
         
         // Add to global file table
         $query = "INSERT INTO ".SQL::GLOBAL_FILE_TABLE
-            ." (id, file_owner, file_name, description, download_count)"
-            ." VALUES (?, ?, ? ,'DEFAULT_DESCRIPTION', '0')";
+            ." (id, file_owner, file_name)"
+            ." VALUES (?, ?, ?)";
             
         $stmt = $conn->prepare($query);
         if (!$stmt) {
@@ -179,15 +185,15 @@ class Database
         
         // Add to user file table
         $query = "INSERT INTO ".SQL::USER_FILES_TABLE.$userID
-            ." (file_id, file_name, file_description, file_password, download_count)"
-            ." VALUES (?, ?, 'DEFAULT_DESCRIPTION', '', '0')";
+            ." (file_id, file_name, file_type, file_description, file_password, public, download_count)"
+            ." VALUES (?, ?, ?, 'DEFAULT_DESCRIPTION', ?, ?, '0')";
             
         $stmt = $conn->prepare($query);
         if (!$stmt) {
             die($conn->error."<br>");
         }
         
-        $stmt->bind_param("ss", $fileID, $esc_file_name);
+        $stmt->bind_param("ssssi", $fileID, $esc_file_name, $file_type, $hashed_password, $public);
         if (!$stmt->execute()) {
             die($conn->error."<br>");
         }
@@ -224,8 +230,10 @@ class Database
         $sql = "CREATE TABLE ".SQL::USER_FILES_TABLE.$userID." (
             file_id VARCHAR(256) PRIMARY KEY,
             file_name VARCHAR(256) NOT NULL,
+            file_type VARCHAR(256) NOT NULL,
             file_description TEXT NOT NULL,
             file_password VARCHAR(256),
+            public TINYINT(1),
             download_count INT(6) DEFAULT 0
             )";
         
@@ -246,9 +254,7 @@ class Database
         $sql = "CREATE TABLE ".SQL::GLOBAL_FILE_TABLE." (
             id VARCHAR(256) PRIMARY KEY,
             file_owner VARCHAR(256) NOT NULL,
-            file_name VARCHAR(256) NOT NULL,
-            description TEXT NOT NULL,
-            download_count INT(6) DEFAULT 0
+            file_name VARCHAR(256) NOT NULL
             )";
         
         if ($conn->query($sql) === false) {
