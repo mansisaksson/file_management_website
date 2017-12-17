@@ -10,8 +10,15 @@
 	[x] File password	
 	[ ] One time URLs
 
-[ ] Upate download script
-	[ ] include public/private flags
-	[ ] password protection
+[x] Upate download script
+	[x] include public/private flags
+	[x] password protection
+	[x] Do not allow direct download
+	
+[ ] Delete file
+[ ] Edit file
+[ ] Delete user
 
-[ ] Limit register user
+[ ] Add File Owner to user file table (nice to have)
+
+[x] Limit register user

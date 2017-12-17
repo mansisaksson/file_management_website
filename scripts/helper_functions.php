@@ -27,14 +27,15 @@ class HelperFunctions
     {
         $conn = new mysqli(SQL::SERVERNAME, SQL::USERNAME, SQL::PASSWORD);
         if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
+            echo "Connection failed: " . $conn->connect_error;
             return null;
         }
         
         // Open Database
         $sql = "USE ".SQL::DATABASE;
         if ($conn->query($sql) !== TRUE) {
-            die("Could not find file table: " . $conn->error);
+            echo "Could not find file table: " . $conn->error;
+            return null;
         }
         
         return $conn;
@@ -48,40 +49,24 @@ class HelperFunctions
     public static function hasAuthority()
     {
         $session = Session::getInstance();
-        if ($session->UserName() !== null)
-        {
+        if ($session->UserName() !== null) {
             return true;
         }
         
         return false;
     }
     
-    function createNewUserSession($username)
+    public static function createNewUserSession($username)
     {
-        $conn = HelperFunctions::createConnectionToDB();
-        if (!isset($conn)) {
+        $user = User::getUser($username, true);
+        if (!isset($user)) {
+            echo "Tried to create session with invalid user";
             return false;
         }
         
-        // Update our session
-        $esc_username = $conn->escape_string($username);
-        $stmt = $conn->prepare("SELECT id FROM ".SQL::USERS_TABLE." WHERE user_name = ?");
-        $stmt->bind_param('s', $esc_username);
-        $stmt->execute();
-        
-        $result = $stmt->get_result();
-        $stmt->close();
-        $conn->close();
-        
-        if ($result === false || $result->num_rows <= 0){
-            echo ("Could not retrive user data from database. <br>");
-            return false;
-        }
-        
-        $id = $result->fetch_row()[0];
         $session = Session::createNewSession();
-        $session->SetUserName($username);
-        $session->SetUserID($id);
+        $session->SetUserName($user->UserName);
+        $session->SetUserID($user->UserID);
         return true;
     }
 };

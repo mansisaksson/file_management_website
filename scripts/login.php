@@ -7,51 +7,24 @@ $username = $_POST['username'];
 $password = $_POST['password'];
 
 // Retreive hashed password/validate existance of user
-$userID = Database::getUserID($username);
-if (!isset($userID)) {
+$user = User::getUser($username, true);
+if (!isset($user)) {
     echo "Invalid User";
     return;
 }
 
 // Validate password
-$hashed_password = Database::getUserPassword($userID);
-if (!password_verify($password, $hashed_password)) {
+if ($user->ValidatePassword($password) !== true) {
     echo "Invalid Password";
     return;
 }
 
 // Create user session
-if (createNewUserSession($username)) {
+if (HelperFunctions::createNewUserSession($username)) {
     header("Location: ".RP_MAIN_DIR."index.php?content=user_overview.php");
 }
 else {
     echo "Failed to create user session";
     return;
-}
-
-function createNewUserSession($username)
-{
-    $conn = HelperFunctions::createConnectionToDB();
-    $esc_username = $conn->escape_string($username);
-    
-    // Update our session
-    $stmt = $conn->prepare("SELECT id FROM ".SQL::USERS_TABLE." WHERE user_name = ?");
-    $stmt->bind_param('s', $esc_username);
-    $stmt->execute();
-    
-    $result = $stmt->get_result();
-    $stmt->close();
-    $conn->close();
-    
-    if ($result === false || $result->num_rows <= 0){
-        echo "Could not retrive user data from database. <br>";
-        return false;
-    }
-    $id = $result->fetch_row()[0];
-    
-    $session = Session::createNewSession();
-    $session->SetUserName($esc_username);
-    $session->SetUserID($id);
-    return true;
 }
 ?>

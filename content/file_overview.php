@@ -87,6 +87,7 @@ function printFiles($searchQuery)
     
     while($row = $result->fetch_assoc()) 
     {
+        $user = User::getUser($row["file_owner"]);
         ?>
         <tr>
 		<th>
@@ -100,7 +101,7 @@ function printFiles($searchQuery)
         </th>
         <?php
         echo "<th>" . $row["file_name"] . "</th>";
-        echo "<th>" . Database::getUserName($row["file_owner"]) . "</th>";
+        echo "<th>" . $user->UserName . "</th>";
         ?></tr><?php
     }
     ?></table><?php 

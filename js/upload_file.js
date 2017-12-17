@@ -13,8 +13,6 @@ $(':button').on('click', function()
 {
 	var formElement = document.forms.namedItem("fileForm");
 	var form_Data = new FormData(formElement);
-	//var file_data = $('#fileToUpload').prop('files')[0];   
-	//form_Data.append('fileToUpload', file_data);
 	
     $.ajax
     ({

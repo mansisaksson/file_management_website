@@ -23,34 +23,11 @@ printUserFiles($session->UserID(), "");
 
 function printUserFiles($userID, $searchQuery)
 {
-    $conn = HelperFunctions::createConnectionToDB();
-    if (!isset($conn)) {
-        echo "Failed to establish connection to DB";
+    $files = UserFile::getUserFiles($userID, $searchQuery);
+    if (!isset($files)){
+        echo "No Files Found";
         return;
     }
-    
-    $esc_query = "%".$conn->escape_string($searchQuery)."%";
-    $stmt = $conn->prepare("SELECT * FROM ".SQL::USER_FILES_TABLE.$userID." WHERE file_name LIKE ?");
-    if (!$stmt) {
-        echo "Could not find user files. <br>";
-        return;
-    }
-    
-    $stmt->bind_param('s', $esc_query);
-    if (!$stmt->execute()) {
-        echo "File Seach Error: ".$stmt->error."<br>";
-        return;
-    }
-    
-    $result = $stmt->get_result();
-    $stmt->close();
-    $conn->close();
-    
-    if ($result === false || $result->num_rows <= 0){
-        echo "0 Results";
-        return;
-    }
-    
     ?>
     <style>
         table#filesTable {
@@ -59,10 +36,20 @@ function printUserFiles($userID, $searchQuery)
             width: 100%;
         }
         
-        #filesTable td, th {
+        #filesTable th {
             border: 1px solid #dddddd;
             text-align: left;
-            padding: 8px;
+            padding: 4px;
+        }
+        
+        tr#header {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        tr#content {
+            font-size: 12px;
+            font-weight: normal;
         }
         
         #filesTable tr:nth-child(even) {
@@ -71,7 +58,7 @@ function printUserFiles($userID, $searchQuery)
     </style>
 
     <table style="width:100%" id = "filesTable">
-      <tr>
+      <tr id = "header"> 
       	<th>Download</th>
       	<th>URL</th>
         <th>Name</th>
@@ -83,30 +70,29 @@ function printUserFiles($userID, $searchQuery)
       </tr>
     <?php
     
-    while($row = $result->fetch_assoc()) 
+    foreach ($files as &$file) 
     {
-        $fileID = $row["file_id"];
         ?>
-        <tr>
-		<th>
-			<form action="<?php echo RP_SCRIPTS_DIR; ?>download_file.php">
-            	<button type="submit" value="<?php echo $fileID; ?>" name="fileID">Download</button>
-            </form>
-        </th>
-        
-        <th>
-       		<input class="js-copytextarea" value =<?php echo HelperFunctions::getDownloadURL($fileID); ?>>
-        </th>
-        <?php
-        $hasPassword = $row["file_password"] === "" ? "false" : "true";
-        $isPublic = $row["public"] === 0 ? "false" : "true";
-        
-        echo "<th>" . $row["file_name"] . "</th>";
-        echo "<th>" . $row["file_type"] . "</th>";
-        //echo "<th>" . $row["file_description"] . "</th>";
-        echo "<th>" . $hasPassword . "</th>";
-        echo "<th>" . $isPublic . "</th>";
-        echo "<th>" . $row["download_count"] . "</th>";
+        <tr id = "content">
+    		<th>
+    			<form action="<?php echo RP_SCRIPTS_DIR; ?>download_file.php">
+                	<button type="submit" value="<?php echo $file->FileID; ?>" name="fileID">Download</button>
+                </form>
+            </th>
+            
+            <th>
+           		<input class="js-copytextarea" value =<?php echo HelperFunctions::getDownloadURL($file->FileID); ?>>
+            </th>
+            <?php
+            $hasPassword = $file->IsPasswordProdected() ? "true" : "false";
+            $isPublic = $file->IsPublic === true ? "true" : "false";
+            
+            echo "<th>" . $file->FileName . "</th>";
+            echo "<th>" . $file->FileType . "</th>";
+            //echo "<th>" . $row["file_description"] . "</th>";
+            echo "<th>" . $hasPassword . "</th>";
+            echo "<th>" . $isPublic . "</th>";
+            echo "<th>" . $file->DownloadCount . "</th>";
         ?></tr><?php
     }
     ?></table><?php 

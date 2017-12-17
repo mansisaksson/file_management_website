@@ -6,6 +6,12 @@ require_once FP_SCRIPTS_DIR.'globals.php';
 $username = $_POST['username'];
 $password = $_POST['password'];
 $password_conf = $_POST['confirm_password'];
+$registration_key = $_POST['registration_key'];
+
+if ($registration_key !== "t@aU3UEE2b3b3&8Z") {
+    echo "Invalid Registration Key";
+    return;
+}
 
 // Check password validity
 if ($password !== $password_conf){
@@ -13,13 +19,13 @@ if ($password !== $password_conf){
 }
 
 //Check so that the username is not already taken
-$userID = Database::getUserID($username);
+$user = Database::getUser($username, true);
 if (isset($userID)){
     die ("Username already taken");
 }
 
 // Insert into DB
-if (!Database::createNewUser(uniqid(), $username, $password)) {
+if (!Database::addUser(uniqid(), $username, $password)) {
     die ("Failed to create user ".$username);
 }
 

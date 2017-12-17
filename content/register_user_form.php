@@ -10,5 +10,7 @@ require_once FP_SCRIPTS_DIR . 'helper_functions.php';
 	<input type="password" name="password"> <br>
 	Confirm Password: <br>
 	<input type="password" name="confirm_password"> <br>
+	Registration Key: <br>
+	<input type="password" name="registration_key"> <br>
 	<input type="submit" name="submit"> <br>
 </form>
