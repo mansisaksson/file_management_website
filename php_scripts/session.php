@@ -1,5 +1,6 @@
 <?php
 require_once dirname(__DIR__).'/header.php';
+require_once FP_PHP_DIR."User.php";
 
 class Session
 {
@@ -11,27 +12,18 @@ class Session
     
     private function __construct() {}
     
-    
-    public function UserName()
+       
+    public static function getUser(): ?User
     {
-        return isset(self::$instance) ? self::$instance->username : null;
+        $instance = self::getInstance();
+        return isset($instance) ? $instance->user : null;
     }
     
-    public function SetUserName($username)
+    public static function setUser(User $user)
     {
-        if (isset(self::$instance)) 
-            return self::$instance->username = $username;
-    }
-    
-    public function UserID()
-    {
-        return isset(self::$instance) ? self::$instance->userID : null;
-    }
-    
-    public function SetUserID($userID)
-    {
-        if (isset(self::$instance))
-            self::$instance->userID = $userID;
+        $instance = self::getInstance();
+        if (isset($instance))
+            self::$instance->user = $user;
     }
     
     /**

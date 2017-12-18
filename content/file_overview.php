@@ -1,9 +1,9 @@
 <?php
 require_once dirname(__DIR__).'/header.php';
-require_once FP_SCRIPTS_DIR . 'helper_functions.php';
+require_once FP_PHP_DIR . 'helper_functions.php';
 
 // Check user permissions
-if (!HelperFunctions::hasAuthority()) {
+if (!HelperFunctions::isUserLoggedIn()) {
     echo ("Insufficient permissions");
     return;
 }
@@ -30,6 +30,7 @@ printFiles($searchQuerry);
 
 function printFiles($searchQuery)
 {
+    // TODO: Should not do direct acces to the DB here, better to create some form of helper function in UserFile.php
     $conn = HelperFunctions::createConnectionToDB();
     if (!isset($conn)) {
         echo "Failed to establish connection to DB";
@@ -91,7 +92,7 @@ function printFiles($searchQuery)
         ?>
         <tr>
 		<th>
-			<form action="<?php echo RP_SCRIPTS_DIR; ?>download_file.php">
+			<form action="<?php echo RP_PHP_DIR; ?>download_file.php">
             	<button type="submit" value="<?php echo $row["id"]; ?>" name="fileID">Download</button>
             </form>
         </th>

@@ -1,6 +1,6 @@
 <?php
 require_once dirname(__DIR__).'/header.php';
-require_once FP_SCRIPTS_DIR . 'helper_functions.php';
+require_once FP_PHP_DIR . 'helper_functions.php';
 
 //Get form information
 $username = $_POST['username'];

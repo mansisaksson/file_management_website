@@ -1,14 +1,15 @@
 <?php // prepend.php - autoprepended at the top of your tree
-$scriptsFolderName = 'scripts/';
+$serverRootFolder = "/mansisaksson_webbpage/";
+$phpScriptsFolderName = 'php_scripts/';
 $jsFolderName = 'js/';
 $contentFolderName = 'content/';
 $uploadsFolderName = 'uploads/';
 
 define('FP_MAIN_DIR', dirname(__FILE__) . '/');
-define('RP_MAIN_DIR', '/mansisaksson_webbpage/'); //TODO: Could proberly use something like this dirname($_SERVER['REQUEST_URI'])
+define('RP_MAIN_DIR', $serverRootFolder);
 
-define('FP_SCRIPTS_DIR', FP_MAIN_DIR . $scriptsFolderName);
-define('RP_SCRIPTS_DIR', RP_MAIN_DIR . $scriptsFolderName);
+define('FP_PHP_DIR', FP_MAIN_DIR . $phpScriptsFolderName);
+define('RP_PHP_DIR', RP_MAIN_DIR . $phpScriptsFolderName);
 
 define('FP_JS_DIR', FP_MAIN_DIR . $jsFolderName);
 define('RP_JS_DIR', RP_MAIN_DIR . $jsFolderName);

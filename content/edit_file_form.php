@@ -1,12 +1,6 @@
 <?php 
 require_once dirname(__DIR__).'/header.php';
-require_once FP_SCRIPTS_DIR . 'globals.php';
-
-// Check user permissions
-if (!HelperFunctions::hasAuthority()) {
-    echo "Insufficient permissions";
-    return;
-}
+require_once FP_PHP_DIR . 'globals.php';
 
 if (!isset($_GET["fileID"])) {
     echo "No File Selected";
@@ -14,15 +8,21 @@ if (!isset($_GET["fileID"])) {
 }
 
 $fileID = $_GET["fileID"];
-
 $userFile = UserFile::getFile($fileID);
+
+// Check user permissions
+if (!HelperFunctions::isUserLoggedIn($userFile->FileOwner)) {
+    echo "Insufficient permissions";
+    return;
+}
 ?>
 
-<form action="<?php echo RP_SCRIPTS_DIR."edit_file.php"; ?>" method="post" enctype="multipart/form-data">
+<form enctype="multipart/form-data" method="post" name="fileForm">
+	<input type="hidden" name="file_id" value="<?php echo $fileID; ?>">
 	File Name: <br>
 	<input type="text" name="file_name" value="<?php echo $userFile->FileName ?>"> <br><br>
 	
-	<textarea rows="4" cols="50"><?php echo $userFile->FileDescription; ?></textarea><br><br>
+	<textarea name="file_description" rows="4" cols="50"><?php echo $userFile->FileDescription; ?></textarea><br><br>
 	
 	<input type="checkbox" name="change_password" id="change_password" onclick="togglePasswordFormEnabled();">
     <label>Change Password</label> <br>
@@ -34,18 +34,11 @@ $userFile = UserFile::getFile($fileID);
 	    
     <input type="checkbox" name="isPublic" <?php echo $userFile->IsPublic ? "checked" : "" ?>>
     <label>Public</label> <br><br>
-	
-	<input type="submit" name="submit"> <br>
 </form>
 
-<script>
-function togglePasswordFormEnabled()
-{
-	var enabled = document.getElementById('change_password').checked;
-	var passwordInput = document.getElementById("new_password");
-	var confPasswordInput = document.getElementById("password_confirm");
+<input type="button" id="apply" value="Apply" /> <br><br>
+<input type="button" id="delete" value="Delete File" /> 
 
-	passwordInput.disabled = !enabled;
-	confPasswordInput.disabled = !enabled;
-}
-</script>
+<p id="editReturn"></p>
+
+<script type="text/javascript" src="<?php echo RP_JS_DIR; ?>edit_file.js"></script>

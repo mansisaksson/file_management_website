@@ -1,6 +1,6 @@
 <?php
 require_once dirname(__DIR__).'/header.php';
-require_once FP_SCRIPTS_DIR . 'globals.php';
+require_once FP_PHP_DIR . 'globals.php';
 
 class HelperFunctions
 {
@@ -23,7 +23,7 @@ class HelperFunctions
         }
     }
     
-    public static function createConnectionToDB()
+    public static function createConnectionToDB(): ?mysqli
     {
         $conn = new mysqli(SQL::SERVERNAME, SQL::USERNAME, SQL::PASSWORD);
         if ($conn->connect_error) {
@@ -41,22 +41,22 @@ class HelperFunctions
         return $conn;
     }
     
-    public static function getReturnAddr()
+    public static function getReturnAddr(): string
     {
         return basename($_SERVER['REQUEST_URI']);
     }
     
-    public static function hasAuthority()
+    public static function isUserLoggedIn($userID = ""): bool
     {
-        $session = Session::getInstance();
-        if ($session->UserName() !== null) {
+        $user = Session::getUser();
+        if (isset($user) && ($userID === "" || $user->UserID === $userID)) {
             return true;
         }
         
         return false;
     }
     
-    public static function createNewUserSession($username)
+    public static function createNewUserSession($username): bool
     {
         $user = User::getUser($username, true);
         if (!isset($user)) {
@@ -65,8 +65,7 @@ class HelperFunctions
         }
         
         $session = Session::createNewSession();
-        $session->SetUserName($user->UserName);
-        $session->SetUserID($user->UserID);
+        $session->SetUser($user);
         return true;
     }
 };

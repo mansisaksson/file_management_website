@@ -1,15 +1,15 @@
 <?php
 require_once dirname(__DIR__).'/header.php';
-require_once FP_SCRIPTS_DIR . 'helper_functions.php';
+require_once FP_PHP_DIR . 'helper_functions.php';
 
-$session = Session::getInstance();
-if ($session->UserName() === null) {
-    echo ("No User Logged In");
+$user = Session::getUser();
+if (!isset($user)) {
+    echo "No User Logged In";
     return;
 }
 
-echo "User Name: ".$session->UserName()."<br>";
-echo "User ID: ".$session->UserID()."<br>";
+echo "User Name: ".$user->UserName."<br>";
+echo "User ID: ".$user->UserID."<br>";
 echo "<br>";
 
 ?>
@@ -19,7 +19,7 @@ echo "<br>";
 
 <?php
 echo "My Files <br>";
-printUserFiles($session->UserID(), "");
+printUserFiles($user->UserID, "");
 
 function printUserFiles($userID, $searchQuery)
 {
@@ -76,7 +76,7 @@ function printUserFiles($userID, $searchQuery)
         ?>
         <tr id = "content">
     		<th>
-    			<form action="<?php echo RP_SCRIPTS_DIR."download_file.php"; ?>" method="get">
+    			<form action="<?php echo RP_PHP_DIR."download_file.php"; ?>" method="get">
                 	<button type="submit" value="<?php echo $file->FileID; ?>" name="fileID">Download</button>
                 </form>
             </th>

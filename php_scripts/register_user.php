@@ -1,6 +1,6 @@
 <?php
 require_once dirname(__DIR__).'/header.php';
-require_once FP_SCRIPTS_DIR.'globals.php';
+require_once FP_PHP_DIR.'globals.php';
 
 //Get form information
 $username = $_POST['username'];

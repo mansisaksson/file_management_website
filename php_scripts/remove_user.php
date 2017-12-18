@@ -1,15 +1,14 @@
 <?php
 require_once dirname(__DIR__).'/header.php';
-require_once FP_SCRIPTS_DIR . 'globals.php';
+require_once FP_PHP_DIR . 'globals.php';
 
-$session = Session::getInstance();
-if ($session->UserName() === null) {
+$user = Session::getUser();
+if (!isset($user)) {
     echo ("No User Logged In");
     return;
 }
 
-$userID = $session->UserID();
-if (!Database::removeUser($userID)) {
+if (!Database::removeUser($user->UserID)) {
     echo "Failed to remove user!";
     return;
 }

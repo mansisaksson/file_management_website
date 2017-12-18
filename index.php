@@ -7,8 +7,8 @@ require_once "header.php";
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Nothing here</title>
-<link rel="stylesheet" type="text/css" href="./CSS/style_index.css"
-	media="screen">
+<link rel="stylesheet" type="text/css" href="./CSS/style_index.css" media="screen">
+<script data-main="js/main" src="js/lib/require.js"></script>
 </head>
 
 <body>

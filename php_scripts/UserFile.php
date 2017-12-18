@@ -1,4 +1,6 @@
 <?php 
+require_once dirname(__DIR__).'/header.php';
+
 class UserFile
 {
     public $FileOwner = "";
@@ -9,9 +11,27 @@ class UserFile
     public $IsPublic = false;
     public $DownloadCount = 0;
     
-    private $HashedFilePassword = "";
+    public $HashedFilePassword = "";
     
-    function __construct($fileOwner, $fileID, $fileName, $fileType, $fileDescription, $isPublic, $downloadCount, $hashedFilePassword)
+    public function setPassword($password)
+    {
+        if ($password !== "") {
+            $this->HashedFilePassword = password_hash($password, PASSWORD_BCRYPT, array('cost' => 12));
+        }
+        else {
+            $this->HashedFilePassword = "";
+        }
+    }
+    
+    function __construct(
+        string $fileOwner,
+        string $fileID,
+        string $fileName,
+        string $fileType,
+        string $fileDescription,
+        bool $isPublic,
+        int $downloadCount,
+        string $hashedFilePassword)
     {
         $this->FileOwner = $fileOwner;
         $this->FileID = $fileID;
@@ -36,6 +56,26 @@ class UserFile
     public function getFullName()
     {
         return $this->FileName.".".$this->FileType;
+    }
+    
+    public function saveFileToDB(): bool
+    {
+        return Database::addUserFile($this);
+    }
+    
+    public static function createNewFile(
+        string $fileOwner, 
+        string $fileID,
+        string $fileName,
+        string $fileDescription,
+        bool $isPublic,
+        string $password)
+    {
+        $file_type = pathinfo($fileName, PATHINFO_EXTENSION);
+        $file_name = pathinfo($fileName, PATHINFO_FILENAME);
+        $file = new UserFile($fileOwner, $fileID, $file_name, $file_type, $fileDescription, $isPublic, 0, "");
+        $file->setPassword($password);
+        $file->saveFileToDB();
     }
     
     public static function getFile($fileID)

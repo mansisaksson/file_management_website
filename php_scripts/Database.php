@@ -1,7 +1,7 @@
 <?php 
 require_once dirname(__DIR__).'/header.php';
-require_once FP_SCRIPTS_DIR . 'User.php';
-require_once FP_SCRIPTS_DIR . 'UserFile.php';
+require_once FP_PHP_DIR . 'User.php';
+require_once FP_PHP_DIR . 'UserFile.php';
 
 class Database
 {         
@@ -61,55 +61,63 @@ class Database
         return true;
     }
     
-    static function addUserFile($userID, $fileID, $file_name, $password, $public)
+    static function addUserFile(UserFile $file): bool
     {
         $conn = HelperFunctions::createConnectionToDB();
         if (!isset($conn)) {
             return false;
         }
-        
-        $file_type = pathinfo($file_name, PATHINFO_EXTENSION);
-        $esc_file_name = $conn->escape_string(pathinfo($file_name, PATHINFO_FILENAME));
-        
-        $hashed_password = "";
-        if ($password !== "")
-            $hashed_password = password_hash($password, PASSWORD_BCRYPT, array('cost' => 12));
-        
+               
         Database::createGlobalFileTable($conn, false);
-        Database::createUserFileTable($conn, $userID, false);
+        Database::createUserFileTable($conn, $file->FileOwner, false);
         
         // Add to global file table
-        $query = "INSERT INTO ".SQL::GLOBAL_FILE_TABLE
+        $query = "REPLACE INTO ".SQL::GLOBAL_FILE_TABLE
             ." (id, file_owner, file_name)"
             ." VALUES (?, ?, ?)";
             
         $stmt = $conn->prepare($query);
         if (!$stmt) {
-            die($conn->error);
+            echo $conn->error."<br>";
+            return false;
         }
         
-        $stmt->bind_param("sss", $fileID, $userID, $esc_file_name);
+        $stmt->bind_param("sss", $file->FileID, $file->FileOwner, $file->FileName);
         if (!$stmt->execute()) {
-            die($conn->error);
+            echo $conn->error."<br>";
+            return false;
         }
         $stmt->close();
         
         // Add to user file table
-        $query = "INSERT INTO ".SQL::USER_FILES_TABLE.$userID
+        $query = "REPLACE INTO ".SQL::USER_FILES_TABLE.$file->FileOwner
             ." (file_id, file_name, file_type, file_description, file_password, public, download_count)"
-            ." VALUES (?, ?, ?, 'DEFAULT_DESCRIPTION', ?, ?, '0')";
+            ." VALUES (?, ?, ?, ?, ?, ?, ?)";
             
         $stmt = $conn->prepare($query);
         if (!$stmt) {
-            die($conn->error."<br>");
+            echo $conn->error."<br>";
+            return false;
         }
         
-        $stmt->bind_param("ssssi", $fileID, $esc_file_name, $file_type, $hashed_password, $public);
+        $public = $file->IsPublic ? 1 : 0;
+        $stmt->bind_param("sssssii", 
+            $file->FileID,
+            $file->FileName, 
+            $file->FileType, 
+            $file->FileDescription, 
+            $file->HashedFilePassword, 
+            $public, 
+            $file->DownloadCount);
+        
         if (!$stmt->execute()) {
-            die($conn->error."<br>");
+            echo $conn->error."<br>";
+            return false;
         }
         $stmt->close();
         $conn->close();
+        
+        return true;
     }
     
     static function createUserTable($conn, $clearExistingTable)
@@ -149,7 +157,7 @@ class Database
             )";
         
         if ($conn->query($sql) === false) {
-            echo $conn->error."<br>";
+            //echo $conn->error."<br>";
             return false;
         }
         
@@ -169,7 +177,7 @@ class Database
             )";
         
         if ($conn->query($sql) === false) {
-            echo $conn->error."<br>";
+            //echo $conn->error."<br>";
             return false;
         }
         

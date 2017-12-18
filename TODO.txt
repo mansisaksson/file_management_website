@@ -3,6 +3,8 @@
 [x] Fix up SQL injection
 [x] Copy download link to clippboard
 
+[x] Limit register user
+
 [x] Admin tools/login
 	[x] Login validation
 
@@ -15,10 +17,8 @@
 	[x] password protection
 	[x] Do not allow direct download
 	
+[x] Edit file
 [ ] Delete file
-[ ] Edit file
 [ ] Delete user
 
 [ ] Add File Owner to user file table (nice to have)
-
-[x] Limit register user

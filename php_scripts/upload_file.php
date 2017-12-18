@@ -1,16 +1,10 @@
 <?php
 require_once dirname(__DIR__).'/header.php';
-require_once FP_SCRIPTS_DIR.'globals.php';
+require_once FP_PHP_DIR.'globals.php';
 
-// Check user permissions
-if (!HelperFunctions::hasAuthority()) {
-    die ("Insufficient permissions");
-}
-
-$session = Session::getInstance();
-if ($session->UserName() === null) {
-    echo ("No User Logged In");
-    return;
+$sessionUser = Session::getUser();
+if (!isset($sessionUser)) {
+    die ("No User Logged In");
 }
 
 $fileToUpload = "fileToUpload";
@@ -21,7 +15,7 @@ if (isset($_FILES[$fileToUpload]) === false){
 //Get form information
 $password = $_POST['password'];
 $password_conf = $_POST['confirm_password'];
-$public = isset($_POST['isPublic']) ? 1 : 0;
+$public = isset($_POST['isPublic']);
 
 // Check password validity
 if ($password !== $password_conf){
@@ -29,15 +23,16 @@ if ($password !== $password_conf){
 }
 
 $file_name = basename($_FILES[$fileToUpload]["name"]);
-$target_file = uniqid();
+$file_id = uniqid();
+$target_file_name = $file_id;
 
-if (tryUploadFile($fileToUpload, $target_file)) {   
-    Database::addUserFile($session->UserID(), $target_file, $file_name, $password, $public);
+if (tryUploadFile($fileToUpload, $target_file_name)) {
+    UserFile::createNewFile($sessionUser->UserID, $file_id, $file_name, "DEFAULT_DESCRIPTION", $public, $password);
 }
 
-function tryUploadFile($fileToUpload, $target_file)
+function tryUploadFile($fileToUpload, $target_file): bool
 {
-    if (isset($_FILES[$fileToUpload]) === false) {
+    if (!isset($_FILES[$fileToUpload])) {
         echo "Not a valid File" . "<br>";
         return false;
     }

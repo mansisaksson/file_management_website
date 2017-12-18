@@ -1,9 +1,9 @@
 <?php
 require_once dirname(__DIR__).'/header.php';
-require_once FP_SCRIPTS_DIR.'helper_functions.php';
+require_once FP_PHP_DIR.'helper_functions.php';
 
 // Check user permissions
-if (!HelperFunctions::hasAuthority()) {
+if (!HelperFunctions::isUserLoggedIn()) {
     echo "Insufficient permissions";
     return;
 }
@@ -25,5 +25,4 @@ if (!HelperFunctions::hasAuthority()) {
 
 <p id="uploadReturn"></p>
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
-<script type="text/javascript" src="<?php RP_JS_DIR ?>js/upload_file.js"></script>
+<script type="text/javascript" src="<?php echo RP_JS_DIR; ?>upload_file.js"></script>

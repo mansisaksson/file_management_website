@@ -1,6 +1,6 @@
 <?php
 require_once dirname(__DIR__).'/header.php';
-require_once FP_SCRIPTS_DIR . 'helper_functions.php';
+require_once FP_PHP_DIR . 'helper_functions.php';
 ?>
 
 <form action="scripts/register_user.php?return=<?php echo HelperFunctions::getReturnAddr(); ?>" method="post" enctype="multipart/form-data">

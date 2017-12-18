@@ -1,17 +1,13 @@
 <?php
 require_once dirname(__DIR__).'/header.php';
-require_once FP_SCRIPTS_DIR . 'helper_functions.php';
+require_once FP_PHP_DIR . 'helper_functions.php';
 
-// Check user permissions
-if (!HelperFunctions::hasAuthority()) {
-    echo ("Insufficient permissions");
-    return;
+$user = Session::getUser();
+if (!isset($user)) {
+    echo "No user logged in"."<br>";
 }
 
-$session = Session::getInstance();
-if ($session->UserName() !== null) {
-    echo "Current User: ".$session->UserName()."<br>";
-}
+echo "Current User: ".$user->UserName."<br>";
 
 $db_query = "tables=".SQL::USERS_TABLE. "&return=".HelperFunctions::getReturnAddr();
 ?>

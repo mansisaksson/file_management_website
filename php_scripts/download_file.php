@@ -1,6 +1,6 @@
 <?php
 require_once dirname(__DIR__).'/header.php';
-require_once FP_SCRIPTS_DIR.'globals.php';
+require_once FP_PHP_DIR.'globals.php';
 
 $fileID = "";
 if (isset($_GET["fileID"])) {
@@ -35,13 +35,7 @@ if (!isset($userFile)){
 *  If not, check if user is owner
 */
 if ($userFile->IsPublic !== true) {
-    $session = Session::getInstance();
-    if ($session->UserID() === null) {
-        echo "Insufficent Permissions";
-        return;
-    }
-    
-    if ($session->UserID() !== $userFile->FileOwner) {
+    if (!HelperFunctions::isUserLoggedIn($userFile->FileOwner)) {
         echo "Insufficent Permissions";
         return;
     }
@@ -60,6 +54,9 @@ if ($userFile->IsPasswordProdected()) {
         return;
     }
 }
+
+$userFile->DownloadCount += 1;
+$userFile->saveFileToDB();
 
 // Download file
 $fd = fopen($full_path, "rb");

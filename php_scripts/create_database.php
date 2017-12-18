@@ -1,9 +1,9 @@
 <?php
 require_once dirname(__DIR__).'/header.php';
-require_once FP_SCRIPTS_DIR.'globals.php';
+require_once FP_PHP_DIR.'globals.php';
 
 // Check user permissions
-if (!HelperFunctions::hasAuthority()) {
+if (!HelperFunctions::isUserLoggedIn()) {
     die ("Insufficient permissions");
 }
 
