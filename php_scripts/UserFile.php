@@ -13,16 +13,6 @@ class UserFile
     
     public $HashedFilePassword = "";
     
-    public function setPassword($password)
-    {
-        if ($password !== "") {
-            $this->HashedFilePassword = password_hash($password, PASSWORD_BCRYPT, array('cost' => 12));
-        }
-        else {
-            $this->HashedFilePassword = "";
-        }
-    }
-    
     function __construct(
         string $fileOwner,
         string $fileID,
@@ -41,6 +31,16 @@ class UserFile
         $this->IsPublic = $isPublic;
         $this->DownloadCount = $downloadCount;
         $this->HashedFilePassword = $hashedFilePassword;
+    }
+    
+    public function setPassword($password)
+    {
+        if ($password !== "") {
+            $this->HashedFilePassword = password_hash($password, PASSWORD_BCRYPT, array('cost' => 12));
+        }
+        else {
+            $this->HashedFilePassword = "";
+        }
     }
     
     public function ValidatePassword($password)
@@ -69,13 +69,24 @@ class UserFile
         string $fileName,
         string $fileDescription,
         bool $isPublic,
-        string $password)
+        string $password): ?UserFile
     {
+        $existingFile = UserFile::getFile($fileID);
+        if (isset($existingFile)) {
+            echo "File already exists";
+            return null;
+        }
+        
         $file_type = pathinfo($fileName, PATHINFO_EXTENSION);
         $file_name = pathinfo($fileName, PATHINFO_FILENAME);
         $file = new UserFile($fileOwner, $fileID, $file_name, $file_type, $fileDescription, $isPublic, 0, "");
         $file->setPassword($password);
-        $file->saveFileToDB();
+        if (!$file->saveFileToDB()) {
+            echo "Failed to add file to Database";
+            return null;
+        }
+        
+        return $file;
     }
     
     public static function getFile($fileID)

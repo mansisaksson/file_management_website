@@ -18,18 +18,13 @@ if ($password !== $password_conf){
     die ("Password missmatch");
 }
 
-//Check so that the username is not already taken
-$user = Database::getUser($username, true);
-if (isset($userID)){
-    die ("Username already taken");
-}
-
-// Insert into DB
-if (!Database::addUser(uniqid(), $username, $password)) {
+// Create the user
+$user = User::createNewUser(uniqid(), $username, $password);
+if (!isset($user)) {
     die ("Failed to create user ".$username);
 }
 
-if (HelperFunctions::createNewUserSession($username)) {
+if (HelperFunctions::createNewUserSession($user)) {
     header("Location: ".RP_MAIN_DIR."index.php?content=user_overview.php");
 }
 else {

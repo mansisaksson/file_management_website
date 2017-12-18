@@ -20,7 +20,7 @@ if ($user->ValidatePassword($password) !== true) {
 }
 
 // Create user session
-if (HelperFunctions::createNewUserSession($username)) {
+if (HelperFunctions::createNewUserSession($user)) {
     header("Location: ".RP_MAIN_DIR."index.php?content=user_overview.php");
 }
 else {

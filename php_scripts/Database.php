@@ -5,7 +5,7 @@ require_once FP_PHP_DIR . 'UserFile.php';
 
 class Database
 {         
-    static function addUser($id, $username, $password)
+    static function addUser(User $user): bool
     {
         $conn = HelperFunctions::createConnectionToDB();
         if (!isset($conn)) {
@@ -15,12 +15,8 @@ class Database
         Database::createUserTable($conn, false); // Make sure table exists
         
         // Create the user
-        $esc_id = $conn->escape_string($id);
-        $esc_username = $conn->escape_string($username);
-        $hashed_password = password_hash($password, PASSWORD_BCRYPT, array('cost' => 12));
-        
         $stmt = $conn->prepare("INSERT INTO ".SQL::USERS_TABLE." VALUES(?, ?, ?)");
-        $stmt->bind_param('sss', $esc_id, $esc_username, $hashed_password);
+        $stmt->bind_param('sss', $user->UserID, $user->UserName, $user->HashedUserPassword);
         if (!$stmt->execute()){
             echo "Faild to add user: ".$stmt->error." <br>";
             return false;
@@ -33,7 +29,7 @@ class Database
         return true;
     }
     
-    static function removeUser($id)
+    static function removeUser($id): bool
     {
         $conn = HelperFunctions::createConnectionToDB();
         if (!isset($conn)) {
@@ -120,7 +116,7 @@ class Database
         return true;
     }
     
-    static function createUserTable($conn, $clearExistingTable)
+    static function createUserTable($conn, $clearExistingTable): bool
     {
         if ($clearExistingTable){
             $conn->query("DROP TABLE ".SQL::USERS_TABLE);
@@ -140,7 +136,7 @@ class Database
         return true;
     }
     
-    static function createUserFileTable($conn, $userID, $clearExistingTable)
+    static function createUserFileTable($conn, $userID, $clearExistingTable): bool
     {
         if ($clearExistingTable){
             $conn->query("DROP TABLE ".SQL::USER_FILES_TABLE.$userID);
@@ -164,7 +160,7 @@ class Database
         return true;
     }
     
-    static function createGlobalFileTable($conn, $clearExistingTable)
+    static function createGlobalFileTable($conn, $clearExistingTable): bool
     {
         if ($clearExistingTable){
             $conn->query("DROP TABLE ".SQL::GLOBAL_FILE_TABLE);

@@ -3,14 +3,29 @@ class User
 {
     public $UserName = "";
     public $UserID = "";
+    public $HashedUserPassword = "";
     
-    private $HashedUserPassword = "";
-    
-    function __construct($userID, $userName, $hashedUserPassword)
+    function __construct(string $userID, string $userName, string $hashedUserPassword)
     {
         $this->UserName = $userName;
         $this->UserID = $userID;
         $this->HashedUserPassword = $hashedUserPassword;
+    }
+    
+    public function isValidUser(): bool
+    {
+        $user = User::getUser($this->userID);
+        return isset($user);
+    }
+    
+    public function setPassword($password)
+    {
+        if ($password !== "") {
+            $this->HashedFilePassword = password_hash($password, PASSWORD_BCRYPT, array('cost' => 12));
+        }
+        else {
+            $this->HashedFilePassword = "";
+        }
     }
     
     public function ValidatePassword($password)
@@ -18,7 +33,38 @@ class User
         return password_verify($password, $this->HashedUserPassword);
     }
     
-    static function getUser($UserID, $useNameAsId = false)
+    public function saveUserToDB(): bool
+    {
+        return Database::addUser($this);
+    }
+    
+    public static function createNewUser(
+        string $userID,
+        string $userName,
+        string $password): ?User
+    {
+        $existingUser = User::getUser($userID);
+        if (isset($existingUser)) {
+            echo "Duplicate user IDs"."<br>";
+            return null;
+        }
+        
+        $existingUser = User::getUser($userName, true);
+        if (isset($existingUser)) {
+            echo "Username already exists"."<br>";
+            return null;
+        }
+        
+        $user = new User($userID, $userName, "");
+        $user->setPassword($password);
+        if (!$user->saveUserToDB()) {
+            echo "Failed to add user to Database";
+            return null;
+        }
+        return $user;
+    }
+    
+    public static function getUser($UserID, $useNameAsId = false): ?User
     {
         $conn = HelperFunctions::createConnectionToDB();
         if (!isset($conn)) {

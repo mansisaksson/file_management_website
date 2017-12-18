@@ -56,10 +56,10 @@ class HelperFunctions
         return false;
     }
     
-    public static function createNewUserSession($username): bool
+    public static function createNewUserSession(User $user): bool
     {
-        $user = User::getUser($username, true);
-        if (!isset($user)) {
+        // Make sure user exists
+        if ($user->isValidUser()) {
             echo "Tried to create session with invalid user";
             return false;
         }
