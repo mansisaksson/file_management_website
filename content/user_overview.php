@@ -63,10 +63,11 @@ function printUserFiles($userID, $searchQuery)
       	<th>URL</th>
         <th>Name</th>
         <th>Type</th>
-        <!-- <th>Description</th> -->
+        <th>Description</th>
         <th>Password Protected</th>
         <th>Public</th>
         <th>Download Count</th>
+        <th>Edit</th>
       </tr>
     <?php
     
@@ -75,25 +76,33 @@ function printUserFiles($userID, $searchQuery)
         ?>
         <tr id = "content">
     		<th>
-    			<form action="<?php echo RP_SCRIPTS_DIR; ?>download_file.php">
+    			<form action="<?php echo RP_SCRIPTS_DIR."download_file.php"; ?>" method="get">
                 	<button type="submit" value="<?php echo $file->FileID; ?>" name="fileID">Download</button>
                 </form>
             </th>
             
-            <th>
-           		<input class="js-copytextarea" value =<?php echo HelperFunctions::getDownloadURL($file->FileID); ?>>
-            </th>
+            <th><input class="js-copytextarea" value =<?php echo HelperFunctions::getDownloadURL($file->FileID); ?>></th>
+            
             <?php
             $hasPassword = $file->IsPasswordProdected() ? "true" : "false";
             $isPublic = $file->IsPublic === true ? "true" : "false";
             
             echo "<th>" . $file->FileName . "</th>";
             echo "<th>" . $file->FileType . "</th>";
-            //echo "<th>" . $row["file_description"] . "</th>";
+            echo "<th>" . $file->FileDescription . "</th>";
             echo "<th>" . $hasPassword . "</th>";
             echo "<th>" . $isPublic . "</th>";
             echo "<th>" . $file->DownloadCount . "</th>";
-        ?></tr><?php
+            ?>
+            <th>
+    			<form action="<?php echo RP_MAIN_DIR."index.php"; ?>" method="get">
+    				<input type="hidden" name="content" value="edit_file_form.php">
+                	<button type="submit" value="<?php echo $file->FileID; ?>" name="fileID">Edit</button>
+                </form>
+            </th>
+        </tr>
+        <?php
+        
     }
     ?></table><?php 
 }

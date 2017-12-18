@@ -4,7 +4,7 @@ require_once FP_SCRIPTS_DIR.'helper_functions.php';
 
 // Check user permissions
 if (!HelperFunctions::hasAuthority()) {
-    echo ("Insufficient permissions");
+    echo "Insufficient permissions";
     return;
 }
 ?>
