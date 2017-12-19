@@ -14,17 +14,17 @@ class User
     
     public function isValidUser(): bool
     {
-        $user = User::getUser($this->userID);
+        $user = User::getUser($this->UserID);
         return isset($user);
     }
     
     public function setPassword($password)
     {
         if ($password !== "") {
-            $this->HashedFilePassword = password_hash($password, PASSWORD_BCRYPT, array('cost' => 12));
+            $this->HashedUserPassword = password_hash($password, PASSWORD_BCRYPT, array('cost' => 12));
         }
         else {
-            $this->HashedFilePassword = "";
+            $this->HashedUserPassword = "";
         }
     }
     
@@ -45,20 +45,20 @@ class User
     {
         $existingUser = User::getUser($userID);
         if (isset($existingUser)) {
-            echo "Duplicate user IDs"."<br>";
+            error_msg("Duplicate user IDs");
             return null;
         }
         
         $existingUser = User::getUser($userName, true);
         if (isset($existingUser)) {
-            echo "Username already exists"."<br>";
+            error_msg("Username already exists");
             return null;
         }
         
         $user = new User($userID, $userName, "");
         $user->setPassword($password);
         if (!$user->saveUserToDB()) {
-            echo "Failed to add user to Database";
+            error_msg("Failed to add user to Database");
             return null;
         }
         return $user;
@@ -72,14 +72,15 @@ class User
         }
         
         $searchColumn = $useNameAsId ? "user_name" : "id";
-        $stmt = $conn->prepare("SELECT * FROM ".SQL::USERS_TABLE." WHERE ".$searchColumn." = ?");
+        $stmt = $conn->prepare("SELECT * FROM ".SQL::USERS_TABLE." WHERE ".$searchColumn." = ?");       
         if (!$stmt) {
+            error_msg("Ivalid SQL statment: " . $conn->error);
             return null;
         }
         
         $stmt->bind_param('s', $UserID);
         if (!$stmt->execute()) {
-            echo "Failed to get user info: ".$stmt->error."<br>";
+            error_msg("Failed to get user info: " . $conn->error);
             return null;
         }
         
@@ -87,8 +88,8 @@ class User
         $stmt->close();
         $conn->close();
         
-        if ($result === false || $result->num_rows <= 0){
-            echo "Could not retrive user data from database. <br>";
+        if ($result === false || $result->num_rows <= 0) {
+            error_msg("Could not find user: ".$UserID);
             return null;
         }
         

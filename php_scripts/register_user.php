@@ -9,8 +9,7 @@ $password_conf = $_POST['confirm_password'];
 $registration_key = $_POST['registration_key'];
 
 if ($registration_key !== "t@aU3UEE2b3b3&8Z") {
-    echo "Invalid Registration Key";
-    return;
+    die ("Invalid Registration Key");
 }
 
 // Check password validity
@@ -28,8 +27,7 @@ if (HelperFunctions::createNewUserSession($user)) {
     header("Location: ".RP_MAIN_DIR."index.php?content=user_overview.php");
 }
 else {
-    echo "Failed to create user session";
-    return;
+    die ("Failed to create user session");
 }
 //HelperFunctions::goToRetPage();
 ?>

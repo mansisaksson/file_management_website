@@ -101,13 +101,13 @@ class UserFile
         $sql_query = "SELECT * FROM ".SQL::GLOBAL_FILE_TABLE." WHERE id = ?";
         $stmt = $conn->prepare($sql_query);
         if (!$stmt) {
-            echo "Invalid SQL statement". $conn->error;
+            error_msg("Invalid SQL statement". $conn->error);
             return null;
         }
         
         $stmt->bind_param("s", $fileID);
         if (!$stmt->execute()) {
-            echo "Failed to extract file from database". $conn->error;
+            error_msg("Failed to extract file from database". $conn->error);
             return null;
         }
         
@@ -115,7 +115,6 @@ class UserFile
         $stmt->close();
         
         if ($result === false || $result->num_rows <= 0) {
-            echo "0 results";
             return null;
         }
         
@@ -126,13 +125,12 @@ class UserFile
         // *** Get the file information
         $stmt = $conn->prepare("SELECT * FROM ".SQL::USER_FILES_TABLE.$fileOwner." WHERE file_id = ?");
         if (!$stmt) {
-            echo "Could not find user files. <br>";
             return null;
         }
         
         $stmt->bind_param('s', $fileID);
         if (!$stmt->execute()) {
-            echo "File Seach Error: ".$stmt->error."<br>";
+            echo "File Seach Error: ".$conn->error."<br>";
             return null;
         }
         
@@ -141,7 +139,6 @@ class UserFile
         $conn->close();
         
         if ($result === false || $result->num_rows <= 0){
-            echo "0 Results";
             return null;
         }
         
@@ -168,13 +165,12 @@ class UserFile
         $esc_query = "%".$conn->escape_string($searchQuery)."%";
         $stmt = $conn->prepare("SELECT * FROM ".SQL::USER_FILES_TABLE.$userID." WHERE file_name LIKE ?");
         if (!$stmt) {
-            echo "Could not find user files. <br>";
             return null;
         }
         
         $stmt->bind_param('s', $esc_query);
         if (!$stmt->execute()) {
-            echo "File Seach Error: ".$stmt->error."<br>";
+            echo "File Seach Error: ".$conn->error."<br>";
             return null;
         }
         
@@ -183,10 +179,8 @@ class UserFile
         $conn->close();
         
         if ($result === false || $result->num_rows <= 0){
-            echo "0 Results";
             return null;
         }
-        
         
         $files = array($result->num_rows);
         $count = 0;

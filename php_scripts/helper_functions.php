@@ -24,12 +24,14 @@ class HelperFunctions
     }
     
     public static function createConnectionToDB(): ?mysqli
-    {
+    {      
         $conn = new mysqli(SQL::SERVERNAME, SQL::USERNAME, SQL::PASSWORD);
         if ($conn->connect_error) {
             echo "Connection failed: " . $conn->connect_error;
             return null;
         }
+        
+        Database::createDatabase($conn, false);
         
         // Open Database
         $sql = "USE ".SQL::DATABASE;
@@ -59,8 +61,10 @@ class HelperFunctions
     public static function createNewUserSession(User $user): bool
     {
         // Make sure user exists
-        if ($user->isValidUser()) {
-            echo "Tried to create session with invalid user";
+        if (!$user->isValidUser()) {
+            if (ERROR_ENABLED) {
+                echo "Tried to create session with invalid user"."<br>";
+            }
             return false;
         }
         

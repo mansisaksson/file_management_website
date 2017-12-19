@@ -11,6 +11,6 @@ require_once FP_PHP_DIR . 'helper_functions.php';
 	Confirm Password: <br>
 	<input type="password" name="confirm_password"> <br>
 	Registration Key: <br>
-	<input type="password" name="registration_key"> <br>
+	<input type="text" name="registration_key"> <br>
 	<input type="submit" name="submit"> <br>
 </form>

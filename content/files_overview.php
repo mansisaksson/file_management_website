@@ -20,7 +20,7 @@ $db_query = "tables=".SQL::GLOBAL_FILE_TABLE . "&return=".HelperFunctions::getRe
 </form>
 <br>
 
-<form action=<?php echo RP_MAIN_DIR."index.php?content=file_overview.php" ?> method="post" enctype="multipart/form-data">
+<form action=<?php echo RP_MAIN_DIR."index.php?content=files_overview.php" ?> method="post" enctype="multipart/form-data">
     <input class="js-copytextarea" name="search_query" value=<?php echo $searchQuerry; ?>>
     <button type="submit">Search</button>
 </form>
@@ -45,7 +45,7 @@ function printFiles($searchQuery)
     }
     $stmt->bind_param('s', $esc_query);
     if (!$stmt->execute()) {
-        echo "File Seach Error: ".$stmt->error."<br>";
+        echo "File Seach Error: ".$conn->error."<br>";
         return;
     }
     
@@ -54,7 +54,6 @@ function printFiles($searchQuery)
     $conn->close();
     
     if ($result === false || $result->num_rows <= 0){
-        echo "0 Results";
         return;
     }
     

@@ -12,13 +12,13 @@ require_once "header.php";
 </head>
 
 <body>
-	<?php require "content/scrolling_header.php"; ?> 
+	<?php require FP_CONTENT_DIR."scrolling_header.php"; ?> 
 
 	<header id="top-header">
 		<!-- Nothing Here -->
 	</header>
 
-	<?php require_once FP_CONTENT_DIR."top_nav_menu.php"; ?>
+	<?php require FP_CONTENT_DIR."top_nav_menu.php"; ?>
 
 	<section id="container">
 		<div id="content">
@@ -46,7 +46,7 @@ require_once "header.php";
     	</div>
 	</section>
 
-	<?php require "content/footer.html"; ?>
+	<?php require FP_CONTENT_DIR."footer.html"; ?>
 	
 	<div id="background-stripes"></div>
 </body>

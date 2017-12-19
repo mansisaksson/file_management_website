@@ -13,16 +13,15 @@ class Database
         }
         
         Database::createUserTable($conn, false); // Make sure table exists
-        
         // Create the user
         $stmt = $conn->prepare("INSERT INTO ".SQL::USERS_TABLE." VALUES(?, ?, ?)");
         $stmt->bind_param('sss', $user->UserID, $user->UserName, $user->HashedUserPassword);
         if (!$stmt->execute()){
-            echo "Faild to add user: ".$stmt->error." <br>";
+            error_msg("Faild to add user: ".$conn->error);
             return false;
         }
         
-        Database::createUserFileTable($conn, $esc_id, false);
+        Database::createUserFileTable($conn, $user->UserID, false);
         $stmt->close();
         $conn->close();
         
@@ -41,14 +40,14 @@ class Database
         $stmt = $conn->prepare("DELETE FROM ".SQL::USERS_TABLE." WHERE id = ?");
         $stmt->bind_param('s', $esc_id);
         if (!$stmt->execute()){
-            echo "Faild to remove user: ".$stmt->error." <br>";
+            error_msg("Faild to remove user: ".$conn->error);
             return false;
         }
         $stmt->close();
         
         $sql = "DROP TABLE user_files_".$esc_id;
         if ($conn->query($sql) !== TRUE) {
-            echo "Error removing file table " . $conn->error;
+            error_msg("Error removing file table " . $conn->error);
             return false; // TODO: We should remove the user from the user Table here
         }
         
@@ -74,13 +73,13 @@ class Database
             
         $stmt = $conn->prepare($query);
         if (!$stmt) {
-            echo $conn->error."<br>";
+            error_msg($conn->error);
             return false;
         }
         
         $stmt->bind_param("sss", $file->FileID, $file->FileOwner, $file->FileName);
         if (!$stmt->execute()) {
-            echo $conn->error."<br>";
+            error_msg($conn->error);
             return false;
         }
         $stmt->close();
@@ -92,7 +91,7 @@ class Database
             
         $stmt = $conn->prepare($query);
         if (!$stmt) {
-            echo $conn->error."<br>";
+            error_msg($conn->error);
             return false;
         }
         
@@ -107,7 +106,7 @@ class Database
             $file->DownloadCount);
         
         if (!$stmt->execute()) {
-            echo $conn->error."<br>";
+            error_msg($conn->error);
             return false;
         }
         $stmt->close();
@@ -117,7 +116,7 @@ class Database
     }
     
     static function createUserTable($conn, $clearExistingTable): bool
-    {
+    {       
         if ($clearExistingTable){
             $conn->query("DROP TABLE ".SQL::USERS_TABLE);
         }
@@ -129,7 +128,7 @@ class Database
             )";
         
         if ($conn->query($sql) === false) {
-            echo "Error creating user table " . $conn->error;
+            error_msg("Error creating user table " . $conn->error);
             return false;
         }
         
@@ -137,7 +136,7 @@ class Database
     }
     
     static function createUserFileTable($conn, $userID, $clearExistingTable): bool
-    {
+    {        
         if ($clearExistingTable){
             $conn->query("DROP TABLE ".SQL::USER_FILES_TABLE.$userID);
         }
@@ -153,14 +152,14 @@ class Database
             )";
         
         if ($conn->query($sql) === false) {
-            //echo $conn->error."<br>";
+            error_msg($conn->error);
             return false;
         }
         
         return true;
     }
     
-    static function createGlobalFileTable($conn, $clearExistingTable): bool
+    static function createGlobalFileTable($conn, bool $clearExistingTable): bool
     {
         if ($clearExistingTable){
             $conn->query("DROP TABLE ".SQL::GLOBAL_FILE_TABLE);
@@ -173,7 +172,23 @@ class Database
             )";
         
         if ($conn->query($sql) === false) {
-            //echo $conn->error."<br>";
+            error_msg($conn->error);
+            return false;
+        }
+        
+        return true;
+    }
+    
+    static function createDatabase($conn, bool $clearExistingDatabase): bool
+    {
+        if ($clearExistingDatabase){
+            $conn->query("DROP DATABASE ".SQL::DATABASE);
+        }
+        
+        $sql = "CREATE DATABASE ".SQL::DATABASE;
+        
+        if ($conn->query($sql) === false) {
+            error_msg($conn->error);
             return false;
         }
         
