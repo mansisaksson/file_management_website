@@ -12,18 +12,27 @@ echo "User Name: ".$user->UserName."<br>";
 echo "User ID: ".$user->UserID."<br>";
 echo "<br>";
 
+$searchQuerry = "";
+if (isset($_POST['search_query'])) {
+    $searchQuerry = $_POST['search_query'];
+}
+
 ?>
 <form action="" method="post" enctype="multipart/form-data">
 	<input type="submit" class="button" value="Delete User" name="delete_user">
 </form>
-
+<br>
+<form action=<?php echo RP_MAIN_DIR."index.php?content=user_overview.php" ?> method="post" enctype="multipart/form-data">
+    <input class="js-copytextarea" name="search_query" value=<?php echo $searchQuerry; ?>>
+    <button type="submit">Search</button>
+</form>
 <?php
 echo "My Files <br>";
-printUserFiles($user->UserID, "");
+printUserFiles($user->UserID, $searchQuerry);
 
 function printUserFiles($userID, $searchQuery)
 {
-    $files = UserFile::getUserFiles($userID, $searchQuery);
+    $files = UserFile::findFiles($searchQuery, $userID);
     if (!isset($files)){
         echo "No Files Found";
         return;

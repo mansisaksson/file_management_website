@@ -21,7 +21,6 @@ class Database
             return false;
         }
         
-        Database::createUserFileTable($conn, $user->UserID, false);
         $stmt->close();
         $conn->close();
         
@@ -30,30 +29,7 @@ class Database
     
     static function removeUser($id): bool
     {
-        $conn = HelperFunctions::createConnectionToDB();
-        if (!isset($conn)) {
-            return false;
-        }
-        
-        $esc_id = $conn->escape_string($id);
-        
-        $stmt = $conn->prepare("DELETE FROM ".SQL::USERS_TABLE." WHERE id = ?");
-        $stmt->bind_param('s', $esc_id);
-        if (!$stmt->execute()){
-            error_msg("Faild to remove user: ".$conn->error);
-            return false;
-        }
-        $stmt->close();
-        
-        $sql = "DROP TABLE user_files_".$esc_id;
-        if ($conn->query($sql) !== TRUE) {
-            error_msg("Error removing file table " . $conn->error);
-            return false; // TODO: We should remove the user from the user Table here
-        }
-        
-        $conn->close();
-        
-        return true;
+        // TODO
     }
     
     static function addUserFile(UserFile $file): bool
@@ -63,41 +39,23 @@ class Database
             return false;
         }
                
-        Database::createGlobalFileTable($conn, false);
-        Database::createUserFileTable($conn, $file->FileOwner, false);
-        
-        // Add to global file table
-        $query = "REPLACE INTO ".SQL::GLOBAL_FILE_TABLE
-            ." (id, file_owner, file_name)"
-            ." VALUES (?, ?, ?)";
-            
-        $stmt = $conn->prepare($query);
-        if (!$stmt) {
-            error_msg($conn->error);
-            return false;
-        }
-        
-        $stmt->bind_param("sss", $file->FileID, $file->FileOwner, $file->FileName);
-        if (!$stmt->execute()) {
-            error_msg($conn->error);
-            return false;
-        }
-        $stmt->close();
-        
+        Database::createFileTable($conn, false);
+               
         // Add to user file table
-        $query = "REPLACE INTO ".SQL::USER_FILES_TABLE.$file->FileOwner
-            ." (file_id, file_name, file_type, file_description, file_password, public, download_count)"
-            ." VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $query = "REPLACE INTO ".SQL::FILE_TABLE
+            ." (file_id, file_owner, file_name, file_type, file_description, file_password, public, download_count)"
+            ." VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             
         $stmt = $conn->prepare($query);
         if (!$stmt) {
-            error_msg($conn->error);
+            error_msg("Failed to add file: ". $conn->error);
             return false;
         }
         
         $public = $file->IsPublic ? 1 : 0;
-        $stmt->bind_param("sssssii", 
+        $stmt->bind_param("ssssssii", 
             $file->FileID,
+            $file->FileOwner,
             $file->FileName, 
             $file->FileType, 
             $file->FileDescription, 
@@ -122,7 +80,7 @@ class Database
         }
         
         $sql = "CREATE TABLE ".SQL::USERS_TABLE." (
-            id VARCHAR(256) PRIMARY KEY,
+            user_id VARCHAR(256) PRIMARY KEY,
             user_name VARCHAR(256) NOT NULL,
             password VARCHAR(256) NOT NULL
             )";
@@ -135,44 +93,28 @@ class Database
         return true;
     }
     
-    static function createUserFileTable($conn, $userID, $clearExistingTable): bool
-    {        
+  
+    static function createFileTable($conn, bool $clearExistingTable): bool
+    {
         if ($clearExistingTable){
-            $conn->query("DROP TABLE ".SQL::USER_FILES_TABLE.$userID);
+            $conn->query("DROP TABLE ".SQL::FILE_TABLE);
         }
         
-        $sql = "CREATE TABLE ".SQL::USER_FILES_TABLE.$userID." (
-            file_id VARCHAR(256) PRIMARY KEY,
+        $sql = "CREATE TABLE ".SQL::FILE_TABLE." (
+            file_id VARCHAR(256),
+            file_owner VARCHAR(256),
             file_name VARCHAR(256) NOT NULL,
             file_type VARCHAR(256) NOT NULL,
             file_description TEXT NOT NULL,
             file_password VARCHAR(256),
             public TINYINT(1),
-            download_count INT(6) DEFAULT 0
+            download_count INT(6) DEFAULT 0,
+            PRIMARY KEY (file_id),
+            FOREIGN KEY (file_owner) REFERENCES ".SQL::USERS_TABLE."(user_id)
             )";
         
-        if ($conn->query($sql) === false) {
-            error_msg($conn->error);
-            return false;
-        }
-        
-        return true;
-    }
-    
-    static function createGlobalFileTable($conn, bool $clearExistingTable): bool
-    {
-        if ($clearExistingTable){
-            $conn->query("DROP TABLE ".SQL::GLOBAL_FILE_TABLE);
-        }
-        
-        $sql = "CREATE TABLE ".SQL::GLOBAL_FILE_TABLE." (
-            id VARCHAR(256) PRIMARY KEY,
-            file_owner VARCHAR(256) NOT NULL,
-            file_name VARCHAR(256) NOT NULL
-            )";
-        
-        if ($conn->query($sql) === false) {
-            error_msg($conn->error);
+        if (!$conn->query($sql)) {
+            error_msg("Failed to create File Table: " . $conn->error);
             return false;
         }
         
@@ -188,7 +130,7 @@ class Database
         $sql = "CREATE DATABASE ".SQL::DATABASE;
         
         if ($conn->query($sql) === false) {
-            error_msg($conn->error);
+            error_msg("Failed to create database: ". $conn->error);
             return false;
         }
         

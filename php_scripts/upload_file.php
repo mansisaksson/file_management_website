@@ -23,11 +23,14 @@ if ($password !== $password_conf){
 }
 
 $file_name = basename($_FILES[$fileToUpload]["name"]);
-$file_id = uniqid();
-$target_file_name = $file_id;
+
+$file = UserFile::createNewFile($sessionUser->UserID, $file_name, "DEFAULT_DESCRIPTION", $public, $password);
+$target_file_name = $file->FileID;
 
 if (tryUploadFile($fileToUpload, $target_file_name)) {
-    UserFile::createNewFile($sessionUser->UserID, $file_id, $file_name, "DEFAULT_DESCRIPTION", $public, $password);
+    if (!$file->saveFileToDB()) {
+        unlink(FP_UPLOADS_DIR.$file->FileID); // Delete the file if we failed to add it to the database
+    }
 }
 
 function tryUploadFile($fileToUpload, $target_file): bool

@@ -4,7 +4,7 @@ require_once FP_PHP_DIR . 'globals.php';
 
 class HelperFunctions
 {
-    public static function getDownloadURL($fileID)
+    public static function getDownloadURL($fileID): string
     {
         return $_SERVER['SERVER_NAME'].RP_MAIN_DIR."download.php?fileID=".$fileID;
     }
@@ -27,7 +27,7 @@ class HelperFunctions
     {      
         $conn = new mysqli(SQL::SERVERNAME, SQL::USERNAME, SQL::PASSWORD);
         if ($conn->connect_error) {
-            echo "Connection failed: " . $conn->connect_error;
+            error_msg("Connection failed: " . $conn->connect_error);
             return null;
         }
         
@@ -36,7 +36,7 @@ class HelperFunctions
         // Open Database
         $sql = "USE ".SQL::DATABASE;
         if ($conn->query($sql) !== TRUE) {
-            echo "Could not find file table: " . $conn->error;
+            error_msg("Could not find file table: " . $conn->error);
             return null;
         }
         
@@ -63,7 +63,7 @@ class HelperFunctions
         // Make sure user exists
         if (!$user->isValidUser()) {
             if (ERROR_ENABLED) {
-                echo "Tried to create session with invalid user"."<br>";
+                error_msg("Tried to create session with invalid user");
             }
             return false;
         }

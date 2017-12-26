@@ -71,7 +71,7 @@ class User
             return null;
         }
         
-        $searchColumn = $useNameAsId ? "user_name" : "id";
+        $searchColumn = $useNameAsId ? "user_name" : "user_id";
         $stmt = $conn->prepare("SELECT * FROM ".SQL::USERS_TABLE." WHERE ".$searchColumn." = ?");       
         if (!$stmt) {
             error_msg("Ivalid SQL statment: " . $conn->error);
@@ -95,7 +95,7 @@ class User
         
         $row = $result->fetch_assoc();
         
-        $id = $row["id"];
+        $id = $row["user_id"];
         $userName = $row["user_name"];
         $userPassword = $row["password"];
         

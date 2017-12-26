@@ -1,24 +1,8 @@
-[x] Java script upload file
-[x] Download large files (I get out of memory errors atm)
-[x] Fix up SQL injection
-[x] Copy download link to clippboard
+[ ] One time URLs	
 
-[x] Limit register user
-
-[x] Admin tools/login
-	[x] Login validation
-
-[ ] File download permissions
-	[x] File password	
-	[ ] One time URLs
-
-[x] Upate download script
-	[x] include public/private flags
-	[x] password protection
-	[x] Do not allow direct download
-	
 [x] Edit file
+[ ] Only One big file table
+[ ] File Version embedded in ID (in id so we can know version when someone downloads)
+
 [ ] Delete file
 [ ] Delete user
-
-[ ] Add File Owner to user file table (nice to have)

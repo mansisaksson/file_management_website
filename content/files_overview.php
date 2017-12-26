@@ -13,7 +13,7 @@ if (isset($_POST['search_query'])) {
     $searchQuerry = $_POST['search_query'];
 }
 
-$db_query = "tables=".SQL::GLOBAL_FILE_TABLE . "&return=".HelperFunctions::getReturnAddr();
+$db_query = "tables=".SQL::FILE_TABLE . "&return=".HelperFunctions::getReturnAddr();
 ?>
 <form action="scripts/create_database.php?<?php echo $db_query ?>" method="post" enctype="multipart/form-data">
 	<input type="submit" class="button" value="Clear Files" name="GenerateDB">
@@ -30,33 +30,11 @@ printFiles($searchQuerry);
 
 function printFiles($searchQuery)
 {
-    // TODO: Should not do direct acces to the DB here, better to create some form of helper function in UserFile.php
-    $conn = HelperFunctions::createConnectionToDB();
-    if (!isset($conn)) {
-        echo "Failed to establish connection to DB";
+    $files = UserFile::findFiles($searchQuery);
+    if (!isset($files)){
+        echo "No Files Found";
         return;
     }
-    
-    $esc_query = "%".$conn->escape_string($searchQuery)."%";
-    $stmt = $conn->prepare("SELECT * FROM ".SQL::GLOBAL_FILE_TABLE." WHERE file_name LIKE ?");
-    if (!$stmt) {
-        echo "Faild to locate file table";
-        return;
-    }
-    $stmt->bind_param('s', $esc_query);
-    if (!$stmt->execute()) {
-        echo "File Seach Error: ".$conn->error."<br>";
-        return;
-    }
-    
-    $result = $stmt->get_result();
-    $stmt->close();
-    $conn->close();
-    
-    if ($result === false || $result->num_rows <= 0){
-        return;
-    }
-    
     ?>
     <style>
         table#filesTable {
@@ -65,10 +43,20 @@ function printFiles($searchQuery)
             width: 100%;
         }
         
-        #filesTable td, th {
+        #filesTable th {
             border: 1px solid #dddddd;
             text-align: left;
-            padding: 8px;
+            padding: 4px;
+        }
+        
+        tr#header {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        tr#content {
+            font-size: 12px;
+            font-weight: normal;
         }
         
         #filesTable tr:nth-child(even) {
@@ -81,29 +69,42 @@ function printFiles($searchQuery)
       	<th>Download</th>
       	<th>URL</th>
         <th>Name</th>
-        <th>Owner</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Password Protected</th>
+        <th>Public</th>
+        <th>Download Count</th>
       </tr>
     <?php
     
-    while($row = $result->fetch_assoc()) 
+    foreach ($files as &$file)
     {
-        $user = User::getUser($row["file_owner"]);
         ?>
-        <tr>
-		<th>
-			<form action="<?php echo RP_PHP_DIR; ?>download_file.php">
-            	<button type="submit" value="<?php echo $row["id"]; ?>" name="fileID">Download</button>
-            </form>
-        </th>
-        
-        <th>
-       		<input class="js-copytextarea" value =<?php echo HelperFunctions::getDownloadURL($row["id"]); ?>>
-        </th>
+        <tr id = "content">
+    		<th>
+    			<form action="<?php echo RP_PHP_DIR."download_file.php"; ?>" method="get">
+                	<button type="submit" value="<?php echo $file->FileID; ?>" name="fileID">Download</button>
+                </form>
+            </th>
+            
+            <th><input class="js-copytextarea" value =<?php echo HelperFunctions::getDownloadURL($file->FileID); ?>></th>
+            
+            <?php
+            $hasPassword = $file->IsPasswordProdected() ? "true" : "false";
+            $isPublic = $file->IsPublic === true ? "true" : "false";
+            
+            echo "<th>" . $file->FileName . "</th>";
+            echo "<th>" . $file->FileType . "</th>";
+            echo "<th>" . $file->FileDescription . "</th>";
+            echo "<th>" . $hasPassword . "</th>";
+            echo "<th>" . $isPublic . "</th>";
+            echo "<th>" . $file->DownloadCount . "</th>";
+            ?>
+        </tr>
         <?php
-        echo "<th>" . $row["file_name"] . "</th>";
-        echo "<th>" . $user->UserName . "</th>";
-        ?></tr><?php
+        
     }
+    
     ?></table><?php 
 }
 ?>

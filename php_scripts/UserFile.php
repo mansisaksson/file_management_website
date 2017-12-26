@@ -64,73 +64,37 @@ class UserFile
     }
     
     public static function createNewFile(
-        string $fileOwner, 
-        string $fileID,
+        string $fileOwner,
         string $fileName,
         string $fileDescription,
         bool $isPublic,
         string $password): ?UserFile
     {
-        $existingFile = UserFile::getFile($fileID);
-        if (isset($existingFile)) {
-            echo "File already exists";
-            return null;
-        }
-        
+        $fileID = uniqid();
         $file_type = pathinfo($fileName, PATHINFO_EXTENSION);
         $file_name = pathinfo($fileName, PATHINFO_FILENAME);
         $file = new UserFile($fileOwner, $fileID, $file_name, $file_type, $fileDescription, $isPublic, 0, "");
         $file->setPassword($password);
-        if (!$file->saveFileToDB()) {
-            echo "Failed to add file to Database";
-            return null;
-        }
         
         return $file;
     }
     
     public static function getFile($fileID)
     {
-        // *** Find File Owner
         $conn = HelperFunctions::createConnectionToDB();
         if (!isset($conn)) {
-            echo "Failed to establish connection to database";
             return null;
         }
         
-        $sql_query = "SELECT * FROM ".SQL::GLOBAL_FILE_TABLE." WHERE id = ?";
-        $stmt = $conn->prepare($sql_query);
+        $stmt = $conn->prepare("SELECT * FROM ".SQL::FILE_TABLE." WHERE file_id = ?");
         if (!$stmt) {
-            error_msg("Invalid SQL statement". $conn->error);
-            return null;
-        }
-        
-        $stmt->bind_param("s", $fileID);
-        if (!$stmt->execute()) {
-            error_msg("Failed to extract file from database". $conn->error);
-            return null;
-        }
-        
-        $result = $stmt->get_result();
-        $stmt->close();
-        
-        if ($result === false || $result->num_rows <= 0) {
-            return null;
-        }
-        
-        $row = $result->fetch_assoc();
-        $fileOwner = $row["file_owner"];
-        
-        
-        // *** Get the file information
-        $stmt = $conn->prepare("SELECT * FROM ".SQL::USER_FILES_TABLE.$fileOwner." WHERE file_id = ?");
-        if (!$stmt) {
+            error_msg($conn->error);
             return null;
         }
         
         $stmt->bind_param('s', $fileID);
         if (!$stmt->execute()) {
-            echo "File Seach Error: ".$conn->error."<br>";
+            error_msg("File Seach Error: ".$conn->error);
             return null;
         }
         
@@ -144,7 +108,7 @@ class UserFile
         
         $row = $result->fetch_assoc();
         return new UserFile(
-            $fileOwner,
+            $row["file_owner"],
             $row["file_id"],
             $row["file_name"],
             $row["file_type"],
@@ -154,23 +118,41 @@ class UserFile
             $row["file_password"]);
     }
     
-    public static function getUserFiles($userID, $searchQuery)
+    public static function findFiles($searchQuery, $file_owner = ""): ? array
     {
         $conn = HelperFunctions::createConnectionToDB();
         if (!isset($conn)) {
-            echo "Failed to establish connection to DB";
             return null;
         }
         
+        
+        $query_owner = $file_owner !== "";
         $esc_query = "%".$conn->escape_string($searchQuery)."%";
-        $stmt = $conn->prepare("SELECT * FROM ".SQL::USER_FILES_TABLE.$userID." WHERE file_name LIKE ?");
+        
+        if ($query_owner) {
+            $stmt = $conn->prepare("SELECT * FROM ".SQL::FILE_TABLE."
+                                    WHERE file_owner = ? 
+                                    AND file_name LIKE ?");
+        }
+        else {
+            $stmt = $conn->prepare("SELECT * FROM ".SQL::FILE_TABLE."
+                                    WHERE file_name LIKE ?");
+        }
+        
         if (!$stmt) {
+            error_msg($conn->error);
             return null;
         }
         
-        $stmt->bind_param('s', $esc_query);
+        if ($query_owner) {
+            $stmt->bind_param('ss', $file_owner, $esc_query);
+        }
+        else {
+            $stmt->bind_param('s', $esc_query);
+        }
+        
         if (!$stmt->execute()) {
-            echo "File Seach Error: ".$conn->error."<br>";
+            error_msg("File Seach Error: ".$conn->error);
             return null;
         }
         
@@ -187,7 +169,7 @@ class UserFile
         while($row = $result->fetch_assoc())
         {
             $file = new UserFile(
-                $userID,
+                $row["file_owner"],
                 $row["file_id"],
                 $row["file_name"],
                 $row["file_type"],
