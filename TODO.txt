@@ -1,8 +1,9 @@
-[ ] One time URLs	
-
 [x] Edit file
-[ ] Only One big file table
-[ ] File Version embedded in ID (in id so we can know version when someone downloads)
+[x] Only One big file table
 
-[ ] Delete file
-[ ] Delete user
+
+[x] Delete file
+[x] Delete user
+
+[ ] File Versions
+[ ] One time URLs

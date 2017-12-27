@@ -1,6 +1,6 @@
 <?php
 require_once dirname(__DIR__).'/header.php';
-require_once FP_PHP_DIR . 'helper_functions.php';
+require_once FP_PHP_DIR . 'Core/HelperFunctions.php';
 
 $user = Session::getUser();
 if (!isset($user)) {
@@ -8,32 +8,29 @@ if (!isset($user)) {
     return;
 }
 
-echo "User Name: ".$user->UserName."<br>";
-echo "User ID: ".$user->UserID."<br>";
-echo "<br>";
-
 $searchQuerry = "";
 if (isset($_POST['search_query'])) {
     $searchQuerry = $_POST['search_query'];
 }
 
 ?>
-<form action="" method="post" enctype="multipart/form-data">
-	<input type="submit" class="button" value="Delete User" name="delete_user">
+<form action="<?php echo RP_MAIN_DIR."index.php"; ?>" method="get">
+	<input type="hidden" name="content" value="edit_user_form.php">
+	<button type="submit" value="<?php echo $user->UserID; ?>" name="user_id">Edit User</button>
 </form>
+                
 <br>
 <form action=<?php echo RP_MAIN_DIR."index.php?content=user_overview.php" ?> method="post" enctype="multipart/form-data">
     <input class="js-copytextarea" name="search_query" value=<?php echo $searchQuerry; ?>>
     <button type="submit">Search</button>
 </form>
 <?php
-echo "My Files <br>";
 printUserFiles($user->UserID, $searchQuerry);
 
 function printUserFiles($userID, $searchQuery)
 {
     $files = UserFile::findFiles($searchQuery, $userID);
-    if (!isset($files)){
+    if (count($files) <= 0){
         echo "No Files Found";
         return;
     }
@@ -85,7 +82,7 @@ function printUserFiles($userID, $searchQuery)
         ?>
         <tr id = "content">
     		<th>
-    			<form action="<?php echo RP_PHP_DIR."download_file.php"; ?>" method="get">
+    			<form action="<?php echo RP_PHP_DIR."Scripts/download_file.php"; ?>" method="get">
                 	<button type="submit" value="<?php echo $file->FileID; ?>" name="fileID">Download</button>
                 </form>
             </th>

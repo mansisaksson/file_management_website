@@ -1,5 +1,6 @@
 <?php
 require_once "header.php";
+require_once FP_PHP_DIR . 'Core/Globals.php';
 ?>
 
 <!DOCTYPE html>
@@ -11,11 +12,28 @@ require_once "header.php";
 <script data-main="js/main" src="js/lib/require.js"></script>
 </head>
 
+<style>
+h3#user_name {
+    color: #fff;
+    padding: 10px;
+    font-size: 150%;
+}
+</style>
+
 <body>
 	<?php require FP_CONTENT_DIR."scrolling_header.php"; ?> 
 
 	<header id="top-header">
-		<!-- Nothing Here -->
+		<h3 id=user_name>
+    		<?php
+    		$user = Session::getUser();
+    		if (isset($user)) {
+    		    echo "User: ".$user->UserName."<br>";
+    		    echo "<br>";
+    		}
+    
+    		?>
+		</h3>
 	</header>
 
 	<?php require FP_CONTENT_DIR."top_nav_menu.php"; ?>

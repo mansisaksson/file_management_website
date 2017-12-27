@@ -1,6 +1,6 @@
 <?php
 require_once 'header.php';
-require_once FP_PHP_DIR.'globals.php';
+require_once FP_PHP_DIR.'Core/Globals.php';
 ?>
 
 <body>
@@ -9,7 +9,7 @@ require_once FP_PHP_DIR.'globals.php';
 <script>
 var password = prompt("Enter Password", "");
 
-post('<?php echo RP_PHP_DIR."download_file.php" ?>', {fileID: getUrlVars()["fileID"], password: password});
+post('<?php echo RP_PHP_DIR."Scripts/download_file.php" ?>', {fileID: getUrlVars()["fileID"], password: password});
 
 function post(path, params)
 {

@@ -1,6 +1,6 @@
 <?php
 require_once dirname(__DIR__).'/header.php';
-require_once FP_PHP_DIR . 'helper_functions.php';
+require_once FP_PHP_DIR . 'Core/HelperFunctions.php';
 
 // Check user permissions
 if (!HelperFunctions::isUserLoggedIn()) {
@@ -31,7 +31,7 @@ printFiles($searchQuerry);
 function printFiles($searchQuery)
 {
     $files = UserFile::findFiles($searchQuery);
-    if (!isset($files)){
+    if (count($files) <= 0) {
         echo "No Files Found";
         return;
     }
@@ -82,7 +82,7 @@ function printFiles($searchQuery)
         ?>
         <tr id = "content">
     		<th>
-    			<form action="<?php echo RP_PHP_DIR."download_file.php"; ?>" method="get">
+    			<form action="<?php echo RP_PHP_DIR."Scripts/download_file.php"; ?>" method="get">
                 	<button type="submit" value="<?php echo $file->FileID; ?>" name="fileID">Download</button>
                 </form>
             </th>

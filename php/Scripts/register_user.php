@@ -1,6 +1,6 @@
 <?php
-require_once dirname(__DIR__).'/header.php';
-require_once FP_PHP_DIR.'globals.php';
+require_once dirname(__DIR__).'/../header.php';
+require_once FP_PHP_DIR.'Core/Globals.php';
 
 //Get form information
 $username = $_POST['username'];
@@ -9,25 +9,28 @@ $password_conf = $_POST['confirm_password'];
 $registration_key = $_POST['registration_key'];
 
 if ($registration_key !== "t@aU3UEE2b3b3&8Z") {
-    die ("Invalid Registration Key");
+    error_msg("Invalid Registration Key");
+    return;
 }
 
 // Check password validity
-if ($password !== $password_conf){
-    die ("Password missmatch");
+if ($password !== $password_conf) {
+    echo "Password missmatch";
+    return;
 }
 
 // Create the user
 $user = User::createNewUser(uniqid(), $username, $password);
 if (!isset($user)) {
-    die ("Failed to create user ".$username);
+    error_msg("Failed to create user ".$username);
+    return;
 }
 
 if (HelperFunctions::createNewUserSession($user)) {
     header("Location: ".RP_MAIN_DIR."index.php?content=user_overview.php");
 }
 else {
-    die ("Failed to create user session");
+    error_msg("Failed to create user session");
+    return;
 }
-//HelperFunctions::goToRetPage();
 ?>

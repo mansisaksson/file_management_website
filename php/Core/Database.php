@@ -1,7 +1,7 @@
 <?php 
-require_once dirname(__DIR__).'/header.php';
-require_once FP_PHP_DIR . 'User.php';
-require_once FP_PHP_DIR . 'UserFile.php';
+require_once dirname(__DIR__) . '/../header.php';
+require_once FP_PHP_DIR . 'Core/User.php';
+require_once FP_PHP_DIR . 'Core/UserFile.php';
 
 class Database
 {         
@@ -13,9 +13,17 @@ class Database
         }
         
         Database::createUserTable($conn, false); // Make sure table exists
-        // Create the user
-        $stmt = $conn->prepare("INSERT INTO ".SQL::USERS_TABLE." VALUES(?, ?, ?)");
+        
+        $stmt = $conn->prepare("REPLACE INTO ".SQL::USERS_TABLE.
+            "(user_id, user_name, password)".
+            " VALUES(?, ?, ?)");
+        if (!$stmt) {
+            error_msg("Bad SQL Syntax: ". $conn->error);
+            return false;
+        }
+        
         $stmt->bind_param('sss', $user->UserID, $user->UserName, $user->HashedUserPassword);
+        
         if (!$stmt->execute()){
             error_msg("Faild to add user: ".$conn->error);
             return false;
@@ -27,9 +35,32 @@ class Database
         return true;
     }
     
-    static function removeUser($id): bool
+    static function removeUser($userID): bool
     {
-        // TODO
+        $conn = HelperFunctions::createConnectionToDB();
+        if (!isset($conn)) {
+            return false;
+        }
+        
+        // Add to user file table
+        $query = "DELETE FROM ".SQL::USERS_TABLE." WHERE user_id = ?";
+        
+        $stmt = $conn->prepare($query);
+        if (!$stmt) {
+            error_msg("Bad SQL Syntax: ". $conn->error);
+            return false;
+        }
+        
+        $stmt->bind_param("s", $userID);
+        
+        if (!$stmt->execute()) {
+            error_msg("Failed to remove user: ". $conn->error);
+            return false;
+        }
+        $stmt->close();
+        $conn->close();
+        
+        return true;
     }
     
     static function addUserFile(UserFile $file): bool
@@ -48,7 +79,7 @@ class Database
             
         $stmt = $conn->prepare($query);
         if (!$stmt) {
-            error_msg("Failed to add file: ". $conn->error);
+            error_msg("Bad SQL Syntax: ". $conn->error);
             return false;
         }
         
@@ -64,7 +95,35 @@ class Database
             $file->DownloadCount);
         
         if (!$stmt->execute()) {
-            error_msg($conn->error);
+            error_msg("Failed to add file: ". $conn->error);
+            return false;
+        }
+        $stmt->close();
+        $conn->close();
+        
+        return true;
+    }
+    
+    static function removeFile(String $fileID): bool
+    {
+        $conn = HelperFunctions::createConnectionToDB();
+        if (!isset($conn)) {
+            return false;
+        }
+        
+        // Add to user file table
+        $query = "DELETE FROM ".SQL::FILE_TABLE." WHERE file_id = ?";
+        
+        $stmt = $conn->prepare($query);
+        if (!$stmt) {
+            error_msg("Bad SQL Syntax: ". $conn->error);
+            return false;
+        }
+        
+        $stmt->bind_param("s", $fileID);
+        
+        if (!$stmt->execute()) {
+            error_msg("Failed to remove file: ". $conn->error);
             return false;
         }
         $stmt->close();
@@ -79,13 +138,13 @@ class Database
             $conn->query("DROP TABLE ".SQL::USERS_TABLE);
         }
         
-        $sql = "CREATE TABLE ".SQL::USERS_TABLE." (
+        $sql = "CREATE TABLE IF NOT EXISTS ".SQL::USERS_TABLE." (
             user_id VARCHAR(256) PRIMARY KEY,
             user_name VARCHAR(256) NOT NULL,
             password VARCHAR(256) NOT NULL
             )";
         
-        if ($conn->query($sql) === false) {
+        if (!$conn->query($sql)) {
             error_msg("Error creating user table " . $conn->error);
             return false;
         }
@@ -96,11 +155,11 @@ class Database
   
     static function createFileTable($conn, bool $clearExistingTable): bool
     {
-        if ($clearExistingTable){
+        if ($clearExistingTable) {
             $conn->query("DROP TABLE ".SQL::FILE_TABLE);
         }
         
-        $sql = "CREATE TABLE ".SQL::FILE_TABLE." (
+        $sql = "CREATE TABLE IF NOT EXISTS ".SQL::FILE_TABLE." (
             file_id VARCHAR(256),
             file_owner VARCHAR(256),
             file_name VARCHAR(256) NOT NULL,
@@ -127,9 +186,9 @@ class Database
             $conn->query("DROP DATABASE ".SQL::DATABASE);
         }
         
-        $sql = "CREATE DATABASE ".SQL::DATABASE;
+        $sql = "CREATE DATABASE IF NOT EXISTS ".SQL::DATABASE;
         
-        if ($conn->query($sql) === false) {
+        if (!$conn->query($sql)) {
             error_msg("Failed to create database: ". $conn->error);
             return false;
         }

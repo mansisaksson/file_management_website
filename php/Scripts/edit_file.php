@@ -1,23 +1,24 @@
 <?php 
-require_once dirname(__DIR__).'/header.php';
-require_once FP_PHP_DIR . 'globals.php';
+require_once dirname(__DIR__).'/../header.php';
+require_once FP_PHP_DIR . 'Core/Globals.php';
 
-$fileID = $_POST["file_id"];
+$fileID = isset($_POST["file_id"]) ? $_POST["file_id"] : "";
 
 $file = UserFile::getFile($fileID);
 if (!isset($file)) {
-    echo "Could not find file"."<br>";
+    fatal_error("Could not find file", 500);
     return;
 }
 
 if (!HelperFunctions::isUserLoggedIn($file->FileOwner)) {
-    echo "Insufficient permissions"."<br>";
+    fatal_error("Insufficient permissions", 401);
     return;
 }
 
 $newName = isset($_POST["file_name"]) ? $_POST["file_name"] : "";
 if ($newName === "") { // Quck exit if name is not valid
-    die("File Name cannot be empty"."<br>");
+    fatal_error("File Name cannot be empty", 500);
+    return;
 }
 
 $newDesc = isset($_POST["file_description"]) ? $_POST["file_description"] : "";
@@ -31,7 +32,8 @@ $file->FileName = $newName;
 $file->FileDescription = $newDesc;
 if ($changePassword === true) {
     if ($newPassword !== $newPassword_conf) {
-        die("Pasword Missmatch"."<br>");
+        fatal_error("Pasword Missmatch", 500);
+        return;
     }
     
     $file->setPassword($newPassword);

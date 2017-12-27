@@ -1,6 +1,5 @@
 <?php 
 require_once dirname(__DIR__).'/header.php';
-require_once FP_PHP_DIR . 'globals.php';
 
 if (!isset($_GET["fileID"])) {
     echo "No File Selected";
@@ -18,9 +17,9 @@ if (!HelperFunctions::isUserLoggedIn($userFile->FileOwner)) {
 ?>
 
 <form enctype="multipart/form-data" method="post" name="fileForm">
-	<input type="hidden" name="file_id" value="<?php echo $fileID; ?>">
+	<input type="hidden" id="file_id" name="file_id" value="<?php echo $fileID; ?>">
 	File Name: <br>
-	<input type="text" name="file_name" value="<?php echo $userFile->FileName ?>"> <br><br>
+	<input type="text" name="file_name" value="<?php echo $userFile->FileName; ?>"> <br><br>
 	
 	<textarea name="file_description" rows="4" cols="50"><?php echo $userFile->FileDescription; ?></textarea><br><br>
 	
@@ -32,7 +31,7 @@ if (!HelperFunctions::isUserLoggedIn($userFile->FileOwner)) {
 	Confirm Password: <br>
 	<input type="password" name="password_confirm" id="password_confirm" disabled> <br><br>
 	    
-    <input type="checkbox" name="isPublic" <?php echo $userFile->IsPublic ? "checked" : "" ?>>
+    <input type="checkbox" name="isPublic" <?php echo $userFile->IsPublic ? "checked" : ""; ?>>
     <label>Public</label> <br><br>
 </form>
 

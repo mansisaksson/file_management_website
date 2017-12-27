@@ -1,10 +1,11 @@
 <?php
 require_once dirname(__DIR__).'/header.php';
-require_once FP_PHP_DIR . 'helper_functions.php';
+require_once FP_PHP_DIR . 'Core/HelperFunctions.php';
 
 $user = Session::getUser();
 if (!isset($user)) {
     echo "No user logged in"."<br>";
+    return;
 }
 
 echo "Current User: ".$user->UserName."<br>";

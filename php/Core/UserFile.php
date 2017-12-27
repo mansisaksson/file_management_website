@@ -1,5 +1,5 @@
 <?php 
-require_once dirname(__DIR__).'/header.php';
+require_once dirname(__DIR__) . '/../header.php';
 
 class UserFile
 {
@@ -63,6 +63,15 @@ class UserFile
         return Database::addUserFile($this);
     }
     
+    public function deleteFile(): bool
+    {
+        if (Database::removeFile($this->FileID)) {
+            return unlink(FP_UPLOADS_DIR.$this->FileID);
+        }
+        
+        return false;
+    }
+    
     public static function createNewFile(
         string $fileOwner,
         string $fileName,
@@ -118,11 +127,13 @@ class UserFile
             $row["file_password"]);
     }
     
-    public static function findFiles($searchQuery, $file_owner = ""): ? array
+    public static function findFiles($searchQuery, $file_owner = ""): array
     {
+        $files = array();
+        
         $conn = HelperFunctions::createConnectionToDB();
         if (!isset($conn)) {
-            return null;
+            return $files;
         }
         
         
@@ -141,7 +152,7 @@ class UserFile
         
         if (!$stmt) {
             error_msg($conn->error);
-            return null;
+            return $files;
         }
         
         if ($query_owner) {
@@ -153,7 +164,7 @@ class UserFile
         
         if (!$stmt->execute()) {
             error_msg("File Seach Error: ".$conn->error);
-            return null;
+            return $files;
         }
         
         $result = $stmt->get_result();
@@ -161,10 +172,10 @@ class UserFile
         $conn->close();
         
         if ($result === false || $result->num_rows <= 0){
-            return null;
+            return $files;
         }
         
-        $files = array($result->num_rows);
+        // TODO: Can you pre-allocate the required memory instead of pushing every time?
         $count = 0;
         while($row = $result->fetch_assoc())
         {

@@ -1,6 +1,6 @@
 <?php
-require_once dirname(__DIR__).'/header.php';
-require_once FP_PHP_DIR."User.php";
+require_once dirname(__DIR__) . '/../header.php';
+require_once FP_PHP_DIR . "Core/User.php";
 
 class Session
 {
