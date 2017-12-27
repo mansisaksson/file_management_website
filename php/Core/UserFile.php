@@ -136,9 +136,8 @@ class UserFile
             return $files;
         }
         
-        
         $query_owner = $file_owner !== "";
-        $esc_query = "%".$conn->escape_string($searchQuery)."%";
+        $search_query = "%".$searchQuery."%";
         
         if ($query_owner) {
             $stmt = $conn->prepare("SELECT * FROM ".SQL::FILE_TABLE."
@@ -156,10 +155,10 @@ class UserFile
         }
         
         if ($query_owner) {
-            $stmt->bind_param('ss', $file_owner, $esc_query);
+            $stmt->bind_param('ss', $file_owner, $search_query);
         }
         else {
-            $stmt->bind_param('s', $esc_query);
+            $stmt->bind_param('s', $search_query);
         }
         
         if (!$stmt->execute()) {

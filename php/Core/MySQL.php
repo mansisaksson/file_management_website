@@ -10,6 +10,7 @@ class SQL
     
     const DATABASE = "mansisaksson_webpage_db";
     const FILE_TABLE = "files";
+    const ONETIME_URL_TABLE = "files";
     const USERS_TABLE = "users";
     const PERMISSIONS_TABLE = "permission_groups";
 }
