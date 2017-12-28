@@ -1,5 +1,7 @@
 <?php 
 require_once dirname(__DIR__).'/header.php';
+require_once FP_PHP_DIR.'Core/OneTimeURL.php';
+require_once FP_PHP_DIR.'Core/UserFile.php';
 
 if (!isset($_GET["fileID"])) {
     echo "No File Selected";
@@ -11,16 +13,19 @@ $userFile = UserFile::getFile($fileID);
 
 // Check user permissions
 if (!HelperFunctions::isUserLoggedIn($userFile->FileOwner)) {
-    echo "Insufficient permissions";
+    fatal_error("Insufficient permissions", 401);
     return;
 }
 ?>
+
+<h3>Manage File [<?php echo $userFile->getFullName(); ?>]</h3>
+<hr>
 
 <form enctype="multipart/form-data" method="post" name="fileForm">
 	<input type="hidden" id="file_id" name="file_id" value="<?php echo $fileID; ?>">
 	File Name: <br>
 	<input type="text" name="file_name" value="<?php echo $userFile->FileName; ?>"> <br><br>
-	
+	Description: <br>
 	<textarea name="file_description" rows="4" cols="50"><?php echo $userFile->FileDescription; ?></textarea><br><br>
 	
 	<input type="checkbox" name="change_password" id="change_password" onclick="togglePasswordFormEnabled();">
@@ -32,12 +37,101 @@ if (!HelperFunctions::isUserLoggedIn($userFile->FileOwner)) {
 	<input type="password" name="password_confirm" id="password_confirm" disabled> <br><br>
 	    
     <input type="checkbox" name="isPublic" <?php echo $userFile->IsPublic ? "checked" : ""; ?>>
-    <label>Public</label> <br><br>
+    <label>Public</label> <br>
 </form>
 
-<input type="button" id="apply" value="Apply" /> <br><br>
+<input type="button" id="apply" value="Apply Changes" /> <br><br>
 <input type="button" id="delete" value="Delete File" /> 
 
 <p id="editReturn"></p>
 
 <script type="text/javascript" src="<?php echo RP_JS_DIR; ?>edit_file.js"></script>
+
+<h3>One Time URLs</h3>
+<hr>
+
+<?php 
+printOneTimeURLs($userFile);
+
+?>
+<style>
+div#addURLContainer {
+    border-style: solid;
+    border-width: 2px;
+    padding: 5px;
+    margin-top: 10px;
+}
+h4#URLHeaderText {
+    margin: 0px;
+    margin-bottom: 10px;  
+}
+</style>
+
+<div id="addURLContainer">
+<h4 id ="URLHeaderText">Add New URL</h4>
+<form enctype="multipart/form-data" method="post" name="addURLForm">
+	URL Name: <br>
+	<input type="text" name="file_name" value="DEFAULT NAME"> <br>
+	Limit: <br>
+    <input type="text" name="limit" value="1">
+</form>
+<input type="button" id="addURL" value="Add URL" />
+</div> 
+<?php
+
+function printOneTimeURLs(UserFile $file)
+{
+    $fileURLs = OneTimeURL::findURLs($file->FileOwner, $file->FileID);
+    if (count($fileURLs) <= 0){
+        echo "No URLs Found";
+        return;
+    }
+    ?>
+    <style>
+        table#filesTable {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        
+        #filesTable th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 4px;
+        }
+        
+        tr#header {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        tr#content {
+            font-size: 12px;
+            font-weight: normal;
+        }
+        
+        #filesTable tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+
+    <table style="width:100%" id = "filesTable">
+      <tr id = "header"> 
+      	<th>URL ID</th>
+        <th>URL Owner</th>
+      	<th>File ID</th>
+        <th>User Count</th>
+        <th>Use Limit</th>
+      </tr>
+    <?php
+    foreach ($fileURLs as &$url) 
+    {
+        echo "<th>" . $url->URLID . "</th>";
+        echo "<th>" . $url->URLOwner . "</th>";
+        echo "<th>" . $url->FileID . "</th>";
+        echo "<th>" . $url->UseCount . "</th>";
+        echo "<th>" . $url->UseLimit . "</th>";     
+        ?> <input type="text" name="file_name" value="<?php echo $url->UseLimit; ?>"> <?php
+    }
+    ?></table><?php 
+}

@@ -1,7 +1,8 @@
-<?php 
+<?php
 require_once dirname(__DIR__) . '/../header.php';
 require_once FP_PHP_DIR . 'Core/User.php';
 require_once FP_PHP_DIR . 'Core/UserFile.php';
+require_once FP_PHP_DIR . 'Core/OneTimeURL.php';
 
 class Database
 {         
@@ -17,6 +18,7 @@ class Database
         $stmt = $conn->prepare("REPLACE INTO ".SQL::USERS_TABLE.
             "(user_id, user_name, password)".
             " VALUES(?, ?, ?)");
+        
         if (!$stmt) {
             error_msg("Bad SQL Syntax: ". $conn->error);
             return false;
@@ -104,7 +106,7 @@ class Database
         return true;
     }
     
-    static function removeFile(String $fileID): bool
+    static function removeFile(string $fileID): bool
     {
         $conn = HelperFunctions::createConnectionToDB();
         if (!isset($conn)) {
@@ -124,6 +126,71 @@ class Database
         
         if (!$stmt->execute()) {
             error_msg("Failed to remove file: ". $conn->error);
+            return false;
+        }
+        $stmt->close();
+        $conn->close();
+        
+        return true;
+    }
+    
+    static function addOneTimeURL(OneTimeURL $url): bool
+    {
+        $conn = HelperFunctions::createConnectionToDB();
+        if (!isset($conn)) {
+            return false;
+        }
+        
+        Database::createOneTimeURLTable($conn, false);
+        
+        $query = "REPLACE INTO ".SQL::ONETIME_URL_TABLE
+            ." (url_id, url_name, url_owner, file_id, use_count, use_limit)"
+            ." VALUES (?, ?, ?, ?, ?, ?)";
+            
+        $stmt = $conn->prepare($query);
+        if (!$stmt) {
+            error_msg("Bad SQL Syntax: ". $conn->error);
+            return false;
+        }
+        
+        $public = $file->IsPublic ? 1 : 0;
+        $stmt->bind_param("sssii",
+            $url->URLID,
+            $url->URLName,
+            $url->URLOwner,
+            $url->FileID,
+            $url->UseCount,
+            $url->UseLimit);
+        
+        if (!$stmt->execute()) {
+            error_msg("Failed to add file: ". $conn->error);
+            return false;
+        }
+        $stmt->close();
+        $conn->close();
+        
+        return true;
+    }
+    
+    static function removeOneTimeURL(string $urlID): bool
+    {
+        $conn = HelperFunctions::createConnectionToDB();
+        if (!isset($conn)) {
+            return false;
+        }
+        
+        $query = "DELETE FROM ".SQL::ONETIME_URL_TABLE." WHERE url_id = ?";
+        
+        $stmt = $conn->prepare($query);
+        if (!$stmt) {
+            error_msg("Bad SQL Syntax: ". $conn->error);
+            return false;
+        }
+        
+        $stmt->bind_param("s", $urlID);
+        
+        if (!$stmt->execute()) {
+            error_msg("Failed to remove URL: ". $conn->error);
             return false;
         }
         $stmt->close();
@@ -152,7 +219,6 @@ class Database
         return true;
     }
     
-  
     static function createFileTable($conn, bool $clearExistingTable): bool
     {
         if ($clearExistingTable) {
@@ -160,8 +226,8 @@ class Database
         }
         
         $sql = "CREATE TABLE IF NOT EXISTS ".SQL::FILE_TABLE." (
-            file_id VARCHAR(256),
-            file_owner VARCHAR(256),
+            file_id VARCHAR(256) NOT NULL,
+            file_owner VARCHAR(256) NOT NULL,
             file_name VARCHAR(256) NOT NULL,
             file_type VARCHAR(256) NOT NULL,
             file_description TEXT NOT NULL,
@@ -174,6 +240,32 @@ class Database
         
         if (!$conn->query($sql)) {
             error_msg("Failed to create File Table: " . $conn->error);
+            return false;
+        }
+        
+        return true;
+    }
+    
+    static function createOneTimeURLTable($conn, bool $clearExistingTable): bool
+    {
+        if ($clearExistingTable) {
+            $conn->query("DROP TABLE ".SQL::ONETIME_URL_TABLE);
+        }
+        
+        $sql = "CREATE TABLE IF NOT EXISTS ".SQL::ONETIME_URL_TABLE." (
+            url_id VARCHAR(256) NOT NULL,
+            url_name VARCHAR(256) NOT NULL,
+            url_owner VARCHAR(256) NOT NULL,
+            file_id VARCHAR(256) NOT NULL,
+            use_count INT(6) DEFAULT 0,
+            use_limit INT(6) DEFAULT 1,
+            PRIMARY KEY (url_id),
+            FOREIGN KEY (url_owner) REFERENCES ".SQL::USERS_TABLE."(user_id),
+            FOREIGN KEY (file_id) REFERENCES ".SQL::FILE_TABLE."(file_id)
+            )";
+        
+        if (!$conn->query($sql)) {
+            error_msg("Failed to create URL Table: " . $conn->error);
             return false;
         }
         

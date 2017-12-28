@@ -7,3 +7,7 @@
 
 [ ] File Versions
 [ ] One time URLs
+	[x] URL Table
+	[ ] Add URL
+	[ ] Remove URL
+	[ ] Edit URL
