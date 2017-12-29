@@ -88,7 +88,7 @@ require(["lib/jquery.min"], function() {
 	        
 	        success: function(php_script_response) {
 	        	returnElement.innerHTML = php_script_response;
-	    		alert("URL ADDED!");
+	    		//alert("URL ADDED!");
 	    		location.reload();
 	        },
 	    
@@ -101,6 +101,11 @@ require(["lib/jquery.min"], function() {
 	
 	$('.deleteURL').on('click', function() {
 		var value = $(this).attr("value");
+		var confirmDelete = confirm("Remove URL "+value+"?");
+		if (!confirmDelete) {
+			return;
+		}
+		
 		var form_Data = new FormData();
 		form_Data.append("url_id", value);
 		
@@ -114,7 +119,7 @@ require(["lib/jquery.min"], function() {
 	        
 	        success: function(php_script_response) {
 	        	returnElement.innerHTML = php_script_response;
-	    		alert("URL REMOVED!");
+	    		//alert("URL REMOVED!");
 	    		location.reload();
 	        },
 	    

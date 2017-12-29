@@ -79,7 +79,7 @@ h4#URLHeaderText {
     <input type="text" name="url_limit" value="1">
 </form>
 <input type="button" id="addURL" value="Add URL" />
-</div> 
+</div>
 <?php
 
 function printOneTimeURLs(UserFile $file)
