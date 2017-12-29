@@ -89,7 +89,7 @@ class UserFile
         return $file;
     }
     
-    public static function getFile($fileID)
+    public static function getFile($fileID): ?UserFile
     {
         $conn = HelperFunctions::createConnectionToDB();
         if (!isset($conn)) {

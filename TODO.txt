@@ -8,6 +8,7 @@
 [ ] File Versions
 [ ] One time URLs
 	[x] URL Table
-	[ ] Add URL
-	[ ] Remove URL
+	[x] Add URL
+	[x] Remove URL
 	[ ] Edit URL
+	[ ] Download using onetime url

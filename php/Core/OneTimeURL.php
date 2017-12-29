@@ -8,6 +8,7 @@ class OneTimeURL
     public $URLName = "";
     public $URLOwner = "";
     public $FileID = "";
+    public $HashedURLPassword = "";
     public $UseCount = "";
     public $UseLimit = "";
     
@@ -16,25 +17,45 @@ class OneTimeURL
         string $urlName,
         string $urlOwner,
         string $fileID,
+        string $hashedPassword,
         int $useCount,
         int $useLimit)
     {
-        $this->urlID = $urlID;
+        $this->URLID = $urlID;
         $this->URLName = $urlName;
         $this->URLOwner = $urlOwner;
-        $this->fileID = $fileID;
-        $this->useCount= $useCount;
-        $this->useLimit = $useLimit;
+        $this->FileID = $fileID;
+        $this->HashedURLPassword = $hashedPassword;
+        $this->UseCount= $useCount;
+        $this->UseLimit = $useLimit;
     }
     
     public function saveURLToDB(): bool
     {
-        Database::addOneTimeURL($this);
+        return Database::addOneTimeURL($this);
     }
     
     public function deleteURL(): bool
     {
-        Database::removeOneTimeURL($this->urlID);
+        return Database::removeOneTimeURL($this->URLID);
+    }
+    
+    public function setPassword($password)
+    {
+        if ($password !== "") {
+            $this->HashedURLPassword = password_hash($password, PASSWORD_BCRYPT, array('cost' => 12));
+        }
+        else {
+            $this->HashedURLPassword = "";
+        }
+    }
+    
+    public static function createNewURL(string $urlName, UserFile $file, int $limit): ?OneTimeURL
+    {
+        $fileID = uniqid();
+        $url = new OneTimeURL($fileID, $urlName, $file->FileOwner, $file->FileID, "", 0, $limit);
+        //$url->setPassword() // TODO: do password on this
+        return $url;
     }
     
     public static function getURL($urlID)
@@ -70,6 +91,7 @@ class OneTimeURL
             $row["url_name"],
             $row["url_owner"],
             $row["file_id"],
+            $row["url_password"],
             $row["use_count"],
             $row["use_limit"]);
     }
@@ -128,8 +150,9 @@ class OneTimeURL
             $file = new OneTimeURL(
                 $row["url_id"],
                 $row["url_name"],
-                $row["file_id"],
                 $row["url_owner"],
+                $row["file_id"],
+                $row["url_password"],
                 $row["use_count"],
                 $row["use_limit"]);
             

@@ -144,8 +144,8 @@ class Database
         Database::createOneTimeURLTable($conn, false);
         
         $query = "REPLACE INTO ".SQL::ONETIME_URL_TABLE
-            ." (url_id, url_name, url_owner, file_id, use_count, use_limit)"
-            ." VALUES (?, ?, ?, ?, ?, ?)";
+            ." (url_id, url_name, url_owner, file_id, url_password, use_count, use_limit)"
+            ." VALUES (?, ?, ?, ?, ?, ?, ?)";
             
         $stmt = $conn->prepare($query);
         if (!$stmt) {
@@ -153,17 +153,17 @@ class Database
             return false;
         }
         
-        $public = $file->IsPublic ? 1 : 0;
-        $stmt->bind_param("sssii",
+        $stmt->bind_param("sssssii",
             $url->URLID,
             $url->URLName,
             $url->URLOwner,
             $url->FileID,
+            $url->HashedURLPassword,
             $url->UseCount,
             $url->UseLimit);
         
         if (!$stmt->execute()) {
-            error_msg("Failed to add file: ". $conn->error);
+            error_msg("Failed to add URL: ". $conn->error);
             return false;
         }
         $stmt->close();
@@ -257,6 +257,7 @@ class Database
             url_name VARCHAR(256) NOT NULL,
             url_owner VARCHAR(256) NOT NULL,
             file_id VARCHAR(256) NOT NULL,
+            url_password VARCHAR(256) NOT NULL,
             use_count INT(6) DEFAULT 0,
             use_limit INT(6) DEFAULT 1,
             PRIMARY KEY (url_id),

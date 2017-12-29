@@ -6,13 +6,11 @@ $userID = isset($_POST["user_id"]) ? $_POST["user_id"] : "";
 
 $user = User::getUser($userID);
 if (!isset($user)) {
-    fatal_error("Could not find user", 500);
-    return;
+    exit_script("Could not find user", 500);
 }
 
 if (!HelperFunctions::isUserLoggedIn($user->UserID)) {
-    fatal_error("Insufficient permissions", 401);
-    return;
+    exit_script("Insufficient permissions", 401);
 }
 
 $newName = isset($_POST["user_name"]) ? $_POST["user_name"] : "";
@@ -22,22 +20,19 @@ $newPassword_conf = isset($_POST["password_confirm"]) ? $_POST["password_confirm
 
 // Update file
 if (!$user->setUserName($newName)) {
-    fatal_error("Invalid User Name: ", 500);
-    return;
+    exit_script("Invalid User Name: ", 500);
 }
 
 if ($changePassword === true) {
     if ($newPassword !== $newPassword_conf) {
-        fatal_error("Pasword Missmatch", 500);
-        return;
+        exit_script("Pasword Missmatch", 500);
     }
     
     $user->setPassword($newPassword);
 }
 
 if (!$user->saveUserToDB()) {
-    fatal_error("Failed to save user changes", 500);
-    return;
+    exit_script("Failed to save user changes", 500);
 }
 
 log_msg("User updated successfully!");

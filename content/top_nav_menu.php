@@ -7,7 +7,6 @@ require_once FP_PHP_DIR . 'Core/Globals.php';
 
 <nav id="top-nav">
 	<ul id="menu">
-
 		<?php
 		$user = Session::getUser();
 		if (isset($user))

@@ -10,11 +10,13 @@ if (!isset($_GET["fileID"])) {
 
 $fileID = $_GET["fileID"];
 $userFile = UserFile::getFile($fileID);
+if (!isset($userFile)) {
+    exit_script("Invalid file id", 500);
+}
 
 // Check user permissions
 if (!HelperFunctions::isUserLoggedIn($userFile->FileOwner)) {
-    fatal_error("Insufficient permissions", 401);
-    return;
+    exit_script("Insufficient permissions", 401);
 }
 ?>
 
@@ -43,7 +45,7 @@ if (!HelperFunctions::isUserLoggedIn($userFile->FileOwner)) {
 <input type="button" id="apply" value="Apply Changes" /> <br><br>
 <input type="button" id="delete" value="Delete File" /> 
 
-<p id="editReturn"></p>
+<p id="php_return"></p>
 
 <script type="text/javascript" src="<?php echo RP_JS_DIR; ?>edit_file.js"></script>
 
@@ -70,10 +72,11 @@ h4#URLHeaderText {
 <div id="addURLContainer">
 <h4 id ="URLHeaderText">Add New URL</h4>
 <form enctype="multipart/form-data" method="post" name="addURLForm">
+	<input type="hidden" name="file_id" value="<?php echo $fileID; ?>">
 	URL Name: <br>
-	<input type="text" name="file_name" value="DEFAULT NAME"> <br>
+	<input type="text" name="url_name" value="DEFAULT NAME"> <br>
 	Limit: <br>
-    <input type="text" name="limit" value="1">
+    <input type="text" name="url_limit" value="1">
 </form>
 <input type="button" id="addURL" value="Add URL" />
 </div> 
@@ -118,20 +121,24 @@ function printOneTimeURLs(UserFile $file)
     <table style="width:100%" id = "filesTable">
       <tr id = "header"> 
       	<th>URL ID</th>
-        <th>URL Owner</th>
-      	<th>File ID</th>
-        <th>User Count</th>
+      	<th>Use Name</th>
+        <th>Use Count</th>
         <th>Use Limit</th>
+        <th>Delete</th>
       </tr>
     <?php
     foreach ($fileURLs as &$url) 
     {
+        ?><tr id = "content"><?php 
         echo "<th>" . $url->URLID . "</th>";
-        echo "<th>" . $url->URLOwner . "</th>";
-        echo "<th>" . $url->FileID . "</th>";
+        echo "<th>" . $url->URLName . "</th>";
         echo "<th>" . $url->UseCount . "</th>";
-        echo "<th>" . $url->UseLimit . "</th>";     
-        ?> <input type="text" name="file_name" value="<?php echo $url->UseLimit; ?>"> <?php
+        echo "<th>" . $url->UseLimit . "</th>";
+        ?>
+        <th>
+        	<button type="submit" class="deleteURL" value="<?php echo $url->URLID; ?>">X</button>
+        </th>
+        </tr><?php
     }
     ?></table><?php 
 }

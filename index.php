@@ -31,7 +31,6 @@ h3#user_name {
     		    echo "User: ".$user->UserName."<br>";
     		    echo "<br>";
     		}
-    
     		?>
 		</h3>
 	</header>

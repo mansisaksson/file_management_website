@@ -28,10 +28,15 @@ require_once FP_PHP_DIR . 'Core/MySQL.php';
 </style>
 <?php 
 
-function fatal_error(string $msg, int $errorCode)
+function exit_script(string $msg = "", int $errorCode = 200)
 {
-    echo "<p id=error_msg>". "Fatal Error: ".$msg. "</p><br>";
+    if ($msg !== "") {
+        $id = ($errorCode >= 200 && $errorCode < 300) ? "log_msg" : "error_msg";
+        echo "<p id=".$id.">". "Fatal Error: ".$msg. "</p><br>";
+    }
+    
     http_response_code($errorCode);
+    exit();
 }
 
 function error_msg($msg)
