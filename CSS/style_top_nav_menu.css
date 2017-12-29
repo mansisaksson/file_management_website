@@ -2,96 +2,12 @@
 /* CSS Document */
 
 nav#top-nav {
-	width: 1024px;
+	width: auto;
 	height: 30px;
-	margin-left: auto;
-	margin-right: auto;
-}
-
-#menu li .no_drop {
-	padding-right: 10px;
-	padding-left: 10px;
-	position: relative;
-	height: 20px;
-	margin-right: 10px;
-}
-
-#menu p, #menu h2, #menu h3, #menu ul li {
-	font-family: Arial, Helvetica, sans-serif;
-	line-height: 21px;
-	font-size: 12px;
-	text-align: left;
-	text-shadow: 1px 1px 1px #FFFFFF;
-}
-
-#menu h2 {
-	font-size: 21px;
-	font-weight: 400;
-	letter-spacing: -1px;
-	margin: 7px 0 14px 0;
-	padding-bottom: 14px;
-	border-bottom: 1px solid #666666;
-}
-
-#menu h3 {
-	font-size: 14px;
-	margin: 7px 0 14px 0;
-	padding-bottom: 7px;
-	border-bottom: 1px solid #888888;
-}
-
-#menu p {
-	line-height: 18px;
-	margin: 0 0 10px 0;
-}
-
-#menu li:hover div a {
-	font-size: 12px;
-	color: #FFF;
-}
-
-#menu li:hover div a:hover {
-	color: #029feb;
-}
-
-#menu li ul {
-	list-style: none;
-	padding: 0;
-	margin: 0 0 12px 0;
-}
-
-#menu li ul li {
-	font-size: 12px;
-	line-height: 24px;
-	position: relative;
-	text-shadow: 1px 1px 1px #ffffff;
-	padding: 0;
-	margin: 0;
-	float: none;
-	text-align: left;
-	width: 180px;
-}
-
-#menu li ul li:hover {
-	background: none;
-	border: none;
-	padding: 0;
-	margin: 0;
-}
-
-#menu li:hover .drop {
-	background: url(../Images/drop.png) no-repeat right 7px;
-}
-
-#menu {
-	position: absolute;
-	z-index: 100;
-	list-style: none;
-	width: 1018px;
-	height: 30px;
-	margin: 0px 0px 0px 0px;
 	margin-top: 10px;
-	padding-left: 5px;
+	margin-left: 100px;
+	margin-right: 100px;
+	
 	background: rgb(169, 3, 41); /* Old browsers */
 	/* IE9 SVG, needs conditional override of 'filter' to 'none' */
 	background:
@@ -116,6 +32,19 @@ nav#top-nav {
 	box-shadow: inset 0px 0px 1px #edf9ff;
 }
 
+#menu li .no_drop {
+	padding-right: 10px;
+	padding-left: 10px;
+	position: relative;
+	height: 20px;
+	margin-right: 10px;
+}
+
+#menu {
+	margin: 0px 0px 0px 0px;
+	padding: 0px;
+}
+
 #menu li {
 	float: left;
 	display: block;
@@ -134,7 +63,7 @@ nav#top-nav {
 	background: #000;
 }
 
-#menu li a {
+#menu a {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 14px;
 	color: #FFF;
@@ -144,25 +73,3 @@ nav#top-nav {
 	text-shadow: 1px 1px 1px #000;
 }
 
-#menu li:hover a {
-	color: #FFF;
-}
-
-#menu li .drop {
-	padding-right: 21px;
-	padding-left: 10px;
-	position: relative;
-	height: 20px;
-	background: url(../Images/drop.gif) no-repeat right;
-	margin-right: 10px;
-}
-
-#menu li:hover .dropdown_1column {
-	left: -1px;
-	top: auto;
-}
-
-#menu li:hover .dropdown_1column_big {
-	left: -1px;
-	top: auto;
-}

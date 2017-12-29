@@ -24,10 +24,10 @@ header#scrolling-header {
 }
 
 div#centered-menu {
-	width: 1025px;
+	width: auto;
 	height: 40px;
-	margin-left: auto;
-	margin-right: auto;
+	margin-left: 100px;
+	margin-right: 100px;
 	border-left: solid;
 	border-color: #000;
 	border-width: 1px;

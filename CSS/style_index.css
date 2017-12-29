@@ -24,10 +24,10 @@ div#background-stripes {
 }
 
 header#top-header {
-	width: 1024px;
 	height: 200px;
-	margin-left: auto;
-	margin-right: auto;
+	width: auto;
+	margin-left: 100px;
+	margin-right: 100px;
 	margin-top: 60px;
 	
 	/* IE9 SVG, needs conditional override of 'filter' to 'none' */
@@ -52,9 +52,9 @@ header#top-header {
 
 section#container {
 	min-height: 2000px;
-	width: 1024px;
-	margin-left: auto;
-	margin-right: auto;
+	width: auto;
+	margin-left: 100px;
+	margin-right: 100px;
 	background-color:#FFF;
 	margin-bottom: 5px;
 	margin-top: 20px;
