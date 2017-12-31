@@ -21,7 +21,7 @@ if (!HelperFunctions::isUserLoggedIn()) {
 </form>
 
 <progress value="0" max="100"></progress> <br>
-<input type="button" value="Upload" /> 
+<input type="button" id=uploadButton value="Upload" /> 
 
 <p id="php_return"></p>
 

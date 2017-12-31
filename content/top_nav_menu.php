@@ -12,9 +12,9 @@ require_once FP_PHP_DIR . 'Core/Globals.php';
 		if (isset($user))
 		{
 		    ?>
-		    <li><a href="index.php?content=upload_file_form.php" class="no_drop">Upload File</a></li>
+		    <li><a href="index.php?content=edit_user_form.php&user_id=<?php echo $user->UserID; ?>" class="no_drop">User</a></li>
+			<li><a href="index.php?content=file_overview.php" class="no_drop">Files</a></li>
 			<li><a href="index.php?content=files_overview.php" class="no_drop">All Files</a></li>
-			<li><a href="index.php?content=user_overview.php" class="no_drop">User Overview</a></li>
 			<li><a href="<?php echo RP_PHP_DIR."Scripts/logout.php"; ?>" class="no_drop">Logout</a></li>
 		    <?php 
 		}

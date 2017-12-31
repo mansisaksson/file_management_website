@@ -10,7 +10,7 @@ require(["lib/jquery.min"], function() {
 	    // Also see .name, .type
 	});
 	
-	$(':button').on('click', function() {
+	$('#uploadButton').on('click', function() {
 		var formElement = document.forms.namedItem("fileForm");
 		var form_Data = new FormData(formElement);
 		

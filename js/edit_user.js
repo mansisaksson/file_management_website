@@ -25,7 +25,7 @@ require(["lib/jquery.min"], function() {
 	        success: function(php_script_response) {
 	        	document.getElementById("php_return").innerHTML = php_script_response;
 	    		alert("User Edited Successfully!");
-	    		window.location.replace("index.php?content=user_overview.php");
+	    		//window.location.replace("index.php?content=user_overview.php");
 	        },
 	    
 	    	error: function(jqXHR, textStatus, errorThrown) {

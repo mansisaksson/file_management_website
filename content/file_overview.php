@@ -27,7 +27,7 @@ require_once FP_CONTENT_DIR . 'upload_file_form.php';
 </form>
 -->   
 <br>
-<form action=<?php echo RP_MAIN_DIR."index.php?content=user_overview.php" ?> method="post" enctype="multipart/form-data">
+<form action=<?php echo RP_MAIN_DIR."index.php?content=file_overview.php" ?> method="post" enctype="multipart/form-data">
     <input class="js-copytextarea" name="search_query" value=<?php echo $searchQuerry; ?>>
     <button type="submit">Search</button>
 </form>
