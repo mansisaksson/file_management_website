@@ -66,6 +66,11 @@ class UserFile
     
     public function deleteFile(): bool
     {
+        $urls = OneTimeURL::findURLs($this->FileOwner, $this->FileID);
+        foreach ($urls as &$url) {
+            $url->deleteURL();
+        }
+        
         if (Database::removeFile($this->FileID)) {
             return unlink(FP_UPLOADS_DIR.$this->FileID);
         }

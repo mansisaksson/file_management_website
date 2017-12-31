@@ -48,8 +48,9 @@ if (!HelperFunctions::isUserLoggedIn($userFile->FileOwner)) {
 <p id="php_return"></p>
 
 <script type="text/javascript" src="<?php echo RP_JS_DIR; ?>edit_file.js"></script>
+<script type="text/javascript" src="<?php echo RP_JS_DIR; ?>edit_url.js"></script>
 
-<h3>One Time URLs</h3>
+<h1>One Time URLs</h3>
 <hr>
 
 <?php 
@@ -74,7 +75,7 @@ h4#URLHeaderText {
 <form enctype="multipart/form-data" method="post" name="addURLForm">
 	<input type="hidden" name="file_id" value="<?php echo $fileID; ?>">
 	URL Name: <br>
-	<input type="text" name="url_name" value="DEFAULT NAME"> <br>
+	<input type="text" id="url_name" name="url_name" value=""> <br>
 	Limit: <br>
     <input type="text" name="url_limit" value="1">
 </form>
@@ -120,23 +121,26 @@ function printOneTimeURLs(UserFile $file)
 
     <table style="width:100%" id = "filesTable">
       <tr id = "header"> 
-      	<th>URL ID</th>
+      	<th>Download URL</th>
       	<th>Use Name</th>
         <th>Use Count</th>
         <th>Use Limit</th>
-        <th>Delete</th>
+        <th></th>
       </tr>
     <?php
     foreach ($fileURLs as &$url) 
     {
-        ?><tr id = "content"><?php 
-        echo "<th>" . $url->URLID . "</th>";
-        echo "<th>" . $url->URLName . "</th>";
+        ?>
+        <tr id = "content">
+        <th><input class="js-copytextarea" value =<?php echo HelperFunctions::getDownloadURL($url->URLID); ?>></th>
+        <?php 
+        echo "<th id=\"name_". $url->URLID ."\" name=\"".$url->URLName."\">" . $url->URLName . "</th>";
         echo "<th>" . $url->UseCount . "</th>";
         echo "<th>" . $url->UseLimit . "</th>";
         ?>
         <th>
         	<button type="submit" class="deleteURL" value="<?php echo $url->URLID; ?>">X</button>
+        	<button type="submit" class="renewURL" value="<?php echo $url->URLID; ?>">Renew</button>
         </th>
         </tr><?php
     }

@@ -23,6 +23,6 @@ if (!HelperFunctions::isUserLoggedIn()) {
 <progress value="0" max="100"></progress> <br>
 <input type="button" value="Upload" /> 
 
-<p id="uploadReturn"></p>
+<p id="php_return"></p>
 
 <script type="text/javascript" src="<?php echo RP_JS_DIR; ?>upload_file.js"></script>

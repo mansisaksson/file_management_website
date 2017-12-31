@@ -13,12 +13,19 @@ if (isset($_POST['search_query'])) {
     $searchQuerry = $_POST['search_query'];
 }
 
+echo "<h2> Upload File </h2>";
+echo "<hr>";
+require_once FP_CONTENT_DIR . 'upload_file_form.php';
 ?>
+<h2>Files</h2>
+<hr>
+
+<!-- TODO: make this into its own thing
 <form action="<?php echo RP_MAIN_DIR."index.php"; ?>" method="get">
 	<input type="hidden" name="content" value="edit_user_form.php">
 	<button type="submit" value="<?php echo $user->UserID; ?>" name="user_id">Edit User</button>
 </form>
-                
+-->   
 <br>
 <form action=<?php echo RP_MAIN_DIR."index.php?content=user_overview.php" ?> method="post" enctype="multipart/form-data">
     <input class="js-copytextarea" name="search_query" value=<?php echo $searchQuerry; ?>>

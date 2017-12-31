@@ -4,12 +4,12 @@ require_once FP_PHP_DIR.'Core/Globals.php';
 
 $sessionUser = Session::getUser();
 if (!isset($sessionUser)) {
-    die ("No User Logged In");
+    exit_script("No User Logged In", 401);
 }
 
 $fileToUpload = "fileToUpload";
-if (isset($_FILES[$fileToUpload]) === false){
-    die ("No file specifiled");
+if (!isset($_FILES[$fileToUpload])){
+    exit_script("Invalid File", 400);
 }
 
 //Get form information
@@ -19,7 +19,7 @@ $public = isset($_POST['isPublic']);
 
 // Check password validity
 if ($password !== $password_conf){
-    die ("Password missmatch");
+    exit_script("Password missmatch", 401);
 }
 
 $file_name = basename($_FILES[$fileToUpload]["name"]);
@@ -30,8 +30,11 @@ $target_file_name = $file->FileID;
 if (tryUploadFile($fileToUpload, $target_file_name)) {
     if (!$file->saveFileToDB()) {
         unlink(FP_UPLOADS_DIR.$file->FileID); // Delete the file if we failed to add it to the database
+        exit_script("Failed to save file to DB", 500);
     }
 }
+
+exit_script("File uploaded successfully");
 
 function tryUploadFile($fileToUpload, $target_file): bool
 {
@@ -41,7 +44,7 @@ function tryUploadFile($fileToUpload, $target_file): bool
     }
     
     if ($_FILES[$fileToUpload]["size"] <= 0) {
-        echo "Not a valid File" . "<br>";
+        echo "The file is too small" . "<br>";
         return false;
     }
     

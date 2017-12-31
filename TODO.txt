@@ -11,4 +11,7 @@
 	[x] Add URL
 	[x] Remove URL
 	[ ] Edit URL
-	[ ] Download using onetime url
+	[x] Renew URL
+	[x] Download using onetime url
+	[x] Delete URLs on file removal
+	

@@ -1,5 +1,6 @@
 <?php
 require_once dirname(__DIR__) . '/../header.php';
+require_once FP_PHP_DIR . 'Core/HelperFunctions.php';
 require_once FP_PHP_DIR . 'Core/Database.php';
 
 class OneTimeURL
