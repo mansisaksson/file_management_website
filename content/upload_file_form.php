@@ -12,9 +12,9 @@ if (!HelperFunctions::isUserLoggedIn()) {
 <form enctype="multipart/form-data" method="post" name="fileForm">
     <input type="file" name="fileToUpload" /> <br><br>
     <label>File Password:</label><br>
-    <input type="password" name="password" /> <br>
+    <input type="password" name="password" autocomplete="new-password" /> <br>
     <label>Confirm Password:</label><br>
-    <input type="password" name="confirm_password" /> <br>
+    <input type="password" name="confirm_password" autocomplete="new-password" /> <br>
     
     <input type="checkbox" name="isPublic" value="0">
     <label>Public</label> <br><br>

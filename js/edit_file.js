@@ -30,7 +30,7 @@ require(["lib/jquery.min"], function() {
 	    		
 	    		var stay = !confirm("File Edited Successfully, go back to files?");
 	    		if (!stay) {
-	    			window.location.replace("index.php?content=user_overview.php");	
+	    			window.location.replace("index.php?content=file_overview.php");	
 	    		}
 	        },
 	    
@@ -63,7 +63,7 @@ require(["lib/jquery.min"], function() {
 	        success: function(php_script_response) {
 	        	returnElement.innerHTML = php_script_response;
 	    		alert("File Removed!");
-	    		window.location.replace("index.php?content=user_overview.php");
+	    		window.location.replace("index.php?content=file_overview.php");
 	        },
 	    
 	    	error: function(jqXHR, textStatus, errorThrown) {

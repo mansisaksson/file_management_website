@@ -5,8 +5,8 @@ class SQL
 {
     // MySQL
     const SERVERNAME = "localhost";
-    const USERNAME = "root";
-    const PASSWORD = "";
+    const USERNAME = "mans_webpage";
+    const PASSWORD = "3@6#JQDHwX3x^*6";
     
     const DATABASE = "mansisaksson_webpage_db";
     const FILE_TABLE = "files";

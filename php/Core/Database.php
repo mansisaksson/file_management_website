@@ -15,10 +15,17 @@ class Database
         
         Database::createUserTable($conn, false); // Make sure table exists
         
-        $stmt = $conn->prepare("REPLACE INTO ".SQL::USERS_TABLE.
-            "(user_id, user_name, password)".
-            " VALUES(?, ?, ?)");
+        $query = "INSERT INTO ".SQL::USERS_TABLE."
+                SET            
+                    user_id = ?,
+                    user_name = ?,
+                    password = ?
+                ON DUPLICATE KEY UPDATE
+                    user_id = VALUES(user_id),
+                    user_name = VALUES(user_name),
+                    password = VALUES(password)";
         
+        $stmt = $conn->prepare($query);
         if (!$stmt) {
             error_msg("Bad SQL Syntax: ". $conn->error);
             return false;
@@ -75,9 +82,25 @@ class Database
         Database::createFileTable($conn, false);
                
         // Add to user file table
-        $query = "REPLACE INTO ".SQL::FILE_TABLE
-            ." (file_id, file_owner, file_name, file_type, file_description, file_password, public, download_count)"
-            ." VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $query = "INSERT INTO ".SQL::FILE_TABLE."  
+                SET
+                    file_id = ?,
+                    file_owner = ?,
+                    file_name = ?,
+                    file_type = ?,
+                    file_description = ?,
+                    file_password = ?,
+                    public = ?,
+                    download_count = ?
+               ON DUPLICATE KEY UPDATE
+                    file_id = VALUES(file_id),
+                    file_owner = VALUES(file_owner),
+                    file_name = VALUES(file_name),
+                    file_type = VALUES(file_type),
+                    file_description = VALUES(file_description),
+                    file_password = VALUES(file_password),
+                    public = VALUES(public),
+                    download_count = VALUES(download_count)";
             
         $stmt = $conn->prepare($query);
         if (!$stmt) {
@@ -97,7 +120,7 @@ class Database
             $file->DownloadCount);
         
         if (!$stmt->execute()) {
-            error_msg("Failed to add file: ". $conn->error);
+            error_msg("Failed to add file: ". $conn->error); // TODO: Get error here
             return false;
         }
         $stmt->close();
@@ -143,9 +166,23 @@ class Database
         
         Database::createOneTimeURLTable($conn, false);
         
-        $query = "REPLACE INTO ".SQL::ONETIME_URL_TABLE
-            ." (url_id, url_name, url_owner, file_id, url_password, use_count, use_limit)"
-            ." VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $query = "INSERT INTO ".SQL::ONETIME_URL_TABLE."
+                SET
+                    url_id = ?,
+                    url_name = ?,
+                    url_owner = ?,
+                    file_id = ?,
+                    url_password = ?,
+                    use_count = ?,
+                    use_limit = ?
+                ON DUPLICATE KEY UPDATE
+                    url_id = VALUES(url_id),
+                    url_name = VALUES(url_name),
+                    url_owner = VALUES(url_owner),
+                    file_id = VALUES(file_id),
+                    url_password = VALUES(url_password),
+                    use_count = VALUES(use_count),
+                    use_limit = VALUES(use_limit)";
             
         $stmt = $conn->prepare($query);
         if (!$stmt) {

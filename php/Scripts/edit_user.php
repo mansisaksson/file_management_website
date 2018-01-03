@@ -35,5 +35,6 @@ if (!$user->saveUserToDB()) {
     exit_script("Failed to save user changes", 500);
 }
 
+Session::setUser($user);
 log_msg("User updated successfully!");
 ?>

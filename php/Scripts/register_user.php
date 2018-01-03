@@ -27,7 +27,7 @@ if (!isset($user)) {
 }
 
 if (HelperFunctions::createNewUserSession($user)) {
-    header("Location: ".RP_MAIN_DIR."index.php?content=user_overview.php");
+    header("Location: ".RP_MAIN_DIR."index.php?content=file_overview.php");
 }
 else {
     error_msg("Failed to create user session");

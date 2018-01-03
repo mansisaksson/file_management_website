@@ -5,7 +5,7 @@
 [x] Delete file
 [x] Delete user
 
-[ ] File Versions
+[ ] File Versions (implement in needed)
 [ ] One time URLs
 	[x] URL Table
 	[x] Add URL
@@ -14,4 +14,6 @@
 	[x] Renew URL
 	[x] Download using onetime url
 	[x] Delete URLs on file removal
+	
+[ ] View Files (With PHP it's possible to view a file without forcing a download)
 	
