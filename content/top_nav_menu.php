@@ -1,8 +1,8 @@
 <?php
-require_once dirname(__DIR__).'/header.php';
+require_once dirname(__DIR__) . '/header.php';
 require_once FP_PHP_DIR . 'Core/Globals.php';
-?>
 
+?>
 <link rel="stylesheet" type="text/css" href="./CSS/style_top_nav_menu.css" media="screen">
 
 <nav id="top-nav">
