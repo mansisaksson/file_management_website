@@ -18,3 +18,7 @@
 [ ] View Files: some files download instead of pre-view, figure out why
 
 [ ] Change fileID to id in download.php
+
+[ ] Files are not deleted from the server when removed, most likley a permission error.
+
+[ ] Instead of reloading the page when uploading files, have a script that gets the files and prints them.
