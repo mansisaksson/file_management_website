@@ -16,3 +16,5 @@
 	
 [x] View Files (With PHP it's possible to view a file without forcing a download)
 [ ] View Files: some files download instead of pre-view, figure out why
+
+[ ] Change fileID to id in download.php

@@ -7,7 +7,7 @@ require_once FP_PHP_DIR . 'Core/Globals.php';
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Nothing here</title>
+<title>Mans Website</title>
 <link rel="stylesheet" type="text/css" href="./CSS/style_index.css" media="screen">
 <script data-main="js/main" src="js/lib/require.js"></script>
 </head>
