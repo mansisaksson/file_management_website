@@ -59,6 +59,11 @@ class UserFile
         return $this->FileName.".".$this->FileType;
     }
     
+    public function getPath()
+    {
+        return FP_UPLOADS_DIR . $this->FileID;
+    }
+    
     public function saveFileToDB(): bool
     {
         return Database::addUserFile($this);

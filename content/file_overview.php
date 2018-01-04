@@ -68,51 +68,56 @@ function printUserFiles($userID, $searchQuery)
         #filesTable tr:nth-child(even) {
             background-color: #dddddd;
         }
+        
+        .no-break-line {
+            display: inline-block;
+        }
     </style>
 
     <table style="width:100%" id = "filesTable">
       <tr id = "header"> 
-      	<th>Download</th>
-      	<th>URL</th>
         <th>Name</th>
         <th>Type</th>
+
+        <th></th>
         <th>Description</th>
         <th>Password Protected</th>
         <th>Public</th>
         <th>Download Count</th>
-        <th>Edit</th>
+        <th>URL</th>
       </tr>
     <?php
     
     foreach ($files as &$file) 
     {
         ?>
-        <tr id = "content">
-    		<th>
-    			<form action="<?php echo RP_PHP_DIR."Scripts/download_file.php"; ?>" method="get">
-                	<button type="submit" value="<?php echo $file->FileID; ?>" name="fileID">Download</button>
-                </form>
-            </th>
-            
-            <th><input class="js-copytextarea" value =<?php echo HelperFunctions::getDownloadURL($file->FileID); ?>></th>
-            
+        <tr id = "content">           
             <?php
             $hasPassword = $file->IsPasswordProdected() ? "true" : "false";
             $isPublic = $file->IsPublic === true ? "true" : "false";
             
             echo "<th>" . $file->FileName . "</th>";
             echo "<th>" . $file->FileType . "</th>";
+            ?>
+            <th>
+    			<form class="no-break-line" action="<?php echo RP_MAIN_DIR."index.php"; ?>" method="get">
+    				<input type="hidden" name="content" value="edit_file_form.php">
+                	<button type="submit" value="<?php echo $file->FileID; ?>" name="fileID">Edit</button>
+                </form>
+                <form class="no-break-line" action="<?php echo RP_PHP_DIR."Scripts/view_file.php"; ?>" method="get">
+                	<button type="submit" value="<?php echo $file->FileID; ?>" name="id">View File</button>
+                </form>
+                <form class="no-break-line" action="<?php echo RP_PHP_DIR."Scripts/download_file.php"; ?>" method="get">
+                	<button type="submit" value="<?php echo $file->FileID; ?>" name="fileID">Download</button>
+                </form>
+            </th>
+            <?php
             echo "<th>" . $file->FileDescription . "</th>";
             echo "<th>" . $hasPassword . "</th>";
             echo "<th>" . $isPublic . "</th>";
             echo "<th>" . $file->DownloadCount . "</th>";
             ?>
-            <th>
-    			<form action="<?php echo RP_MAIN_DIR."index.php"; ?>" method="get">
-    				<input type="hidden" name="content" value="edit_file_form.php">
-                	<button type="submit" value="<?php echo $file->FileID; ?>" name="fileID">Edit</button>
-                </form>
-            </th>
+            <th><input class="js-copytextarea" value =<?php echo HelperFunctions::getDownloadURL($file->FileID); ?>></th>
         </tr>
         <?php
         

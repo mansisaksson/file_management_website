@@ -35,23 +35,21 @@ if (isset($url)) {
     $url->saveURLToDB();
 }
 
-$full_path = FP_UPLOADS_DIR.$fileID;
-
-// Does the file actually exist on disk?
-if (!file_exists($full_path)) {
-    exit_script("Could not find file: ".$full_path, 400);
-}
-
 // Retrevie file information
 $userFile = UserFile::getFile($fileID);
 if (!isset($userFile)){
     exit_script("Could Not Find File in Database", 400);
 }
 
+// Does the file actually exist on disk?
+if (!file_exists($userFile->getPath())) {
+    exit_script("Could not find file: ".$userFile->getPath(), 400);
+}
+
 if ($requireAuth) // If this is a one-time URL then we consider the file to be public
 {
     /* Check if file is public
-     *  If not, check if user is owner
+     * If not, check if user is owner
      */
     if ($userFile->IsPublic !== true) {
         if (!HelperFunctions::isUserLoggedIn($userFile->FileOwner)) {
@@ -77,23 +75,12 @@ $userFile->DownloadCount += 1;
 $userFile->saveFileToDB();
 
 // Download file
-$fd = fopen($full_path, "rb");
+$fd = fopen($userFile->getPath(), "rb");
 if ($fd) 
 {
-    $fsize = filesize($full_path);
-    switch ($userFile->FileType)
-    {
-        case "pdf":
-            header("Content-type: application/pdf");
-            break;
-        case "zip":
-            header("Content-type: application/zip");
-            break;
-        default:
-            header("Content-type: application/octet-stream");
-            break;
-    }
-    
+    $fsize = filesize($userFile->getPath());
+    $contentType = mime_content_type($userFile->getPath());
+    header("Content-type: ".$contentType);
     header("Content-Disposition: attachment; filename=\"".$userFile->getFullName()."\"");
     header("Content-length: $fsize");
     header("Cache-control: private"); //use this to open files directly

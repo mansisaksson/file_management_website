@@ -140,7 +140,7 @@ class OneTimeURL
         $stmt->close();
         $conn->close();
         
-        if ($result === false || $result->num_rows <= 0){
+        if ($result === false || $result->num_rows <= 0) {
             return $urls;
         }
         

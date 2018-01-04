@@ -1,7 +1,6 @@
 [x] Edit file
 [x] Only One big file table
 
-
 [x] Delete file
 [x] Delete user
 
@@ -15,5 +14,5 @@
 	[x] Download using onetime url
 	[x] Delete URLs on file removal
 	
-[ ] View Files (With PHP it's possible to view a file without forcing a download)
-	
+[x] View Files (With PHP it's possible to view a file without forcing a download)
+[ ] View Files: some files download instead of pre-view, figure out why
