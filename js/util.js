@@ -1,4 +1,4 @@
-const serverRootFolder = "/mansisaksson_webbpage/";
+const serverRootFolder = "/ws/";
 const phpScriptsFolderName = 'php/';
 const jsFolderName = 'scripts/';
 const contentFolderName = 'content/';

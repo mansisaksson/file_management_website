@@ -1,5 +1,5 @@
 <?php // prepend.php - autoprepended at the top of your tree
-$serverRootFolder = "/mansisaksson_webbpage/";
+$serverRootFolder = "/ws/";
 $phpScriptsFolderName = 'php/';
 $jsFolderName = 'js/';
 $contentFolderName = 'content/';
