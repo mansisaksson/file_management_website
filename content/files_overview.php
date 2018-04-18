@@ -13,13 +13,7 @@ if (isset($_POST['search_query'])) {
     $searchQuerry = $_POST['search_query'];
 }
 
-$db_query = "tables=".SQL::FILE_TABLE . "&return=".HelperFunctions::getReturnAddr();
 ?>
-<form action="scripts/create_database.php?<?php echo $db_query ?>" method="post" enctype="multipart/form-data">
-	<input type="submit" class="button" value="Clear Files" name="GenerateDB">
-</form>
-<br>
-
 <form action=<?php echo RP_MAIN_DIR."index.php?content=files_overview.php" ?> method="post" enctype="multipart/form-data">
     <input class="js-copytextarea" name="search_query" value=<?php echo $searchQuerry; ?>>
     <button type="submit">Search</button>
@@ -79,30 +73,33 @@ function printFiles($searchQuery)
     
     foreach ($files as &$file)
     {
-        ?>
-        <tr id = "content">
-    		<th>
-    			<form action="<?php echo RP_PHP_DIR."Scripts/download_file.php"; ?>" method="get">
-                	<button type="submit" value="<?php echo $file->FileID; ?>" name="fileID">Download</button>
-                </form>
-            </th>
-            
-            <th><input class="js-copytextarea" value =<?php echo HelperFunctions::getDownloadURL($file->FileID); ?>></th>
-            
-            <?php
-            $hasPassword = $file->IsPasswordProdected() ? "true" : "false";
-            $isPublic = $file->IsPublic === true ? "true" : "false";
-            
-            echo "<th>" . $file->FileName . "</th>";
-            echo "<th>" . $file->FileType . "</th>";
-            echo "<th>" . $file->FileDescription . "</th>";
-            echo "<th>" . $hasPassword . "</th>";
-            echo "<th>" . $isPublic . "</th>";
-            echo "<th>" . $file->DownloadCount . "</th>";
+        // For now we do not list non public files
+        if ($file->IsPublic || $file->FileOwner === Session::getUser()->UserID)
+        {
             ?>
-        </tr>
-        <?php
-        
+            <tr id = "content">
+                <th>
+                    <form action="<?php echo RP_PHP_DIR."Scripts/download_file.php"; ?>" method="get">
+                        <button type="submit" value="<?php echo $file->FileID; ?>" name="fileID">Download</button>
+                    </form>
+                </th>
+                
+                <th><input class="js-copytextarea" value =<?php echo HelperFunctions::getDownloadURL($file->FileID); ?>></th>
+                
+                <?php
+                $hasPassword = $file->IsPasswordProdected() ? "true" : "false";
+                $isPublic = $file->IsPublic === true ? "true" : "false";
+                
+                echo "<th>" . $file->FileName . "</th>";
+                echo "<th>" . $file->FileType . "</th>";
+                echo "<th>" . $file->FileDescription . "</th>";
+                echo "<th>" . $hasPassword . "</th>";
+                echo "<th>" . $isPublic . "</th>";
+                echo "<th>" . $file->DownloadCount . "</th>";
+                ?>
+            </tr>
+            <?php
+        }        
     }
     
     ?></table><?php 
