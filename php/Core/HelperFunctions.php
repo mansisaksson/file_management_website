@@ -6,7 +6,7 @@ class HelperFunctions
 {
     public static function getDownloadURL($fileID): string
     {
-        return $_SERVER['SERVER_NAME'].RP_MAIN_DIR."download.php?fileID=".$fileID;
+        return 'http://'.$_SERVER['SERVER_NAME'].RP_MAIN_DIR."download.php?fileID=".$fileID;
     }
     
     public static function goToRetPage()
