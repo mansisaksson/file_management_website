@@ -64,7 +64,7 @@ h3#user_name {
     	</div>
 	</section>
 
-	<?php require FP_CONTENT_DIR."footer.html"; ?>
+	<?php require FP_CONTENT_DIR."footer.php"; ?>
 	
 	<div id="background-stripes"></div>
 </body>
