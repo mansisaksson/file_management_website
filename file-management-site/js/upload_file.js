@@ -15,7 +15,7 @@ require(["lib/jquery.min"], function() {
 		var form_Data = new FormData(formElement);
 		
 	    $.ajax({
-	        url: RP_PHP_DIR+'Scripts/upload_file.php',
+	        url: RP_PHP_SCRIPTS_DIR+'upload_file.php',
 	        type: 'POST',
 	        data: form_Data,
 	        cache: false,

@@ -13,7 +13,7 @@ require(["lib/jquery.min"], function() {
 		var form_Data = new FormData(formElement);
 		
 	    $.ajax({
-	        url: RP_PHP_DIR+'Scripts/add_onetime_url.php',
+	        url: RP_PHP_SCRIPTS_DIR+'add_onetime_url.php',
 	        type: 'POST',
 	        data: form_Data,
 	        cache: false,
@@ -47,7 +47,7 @@ require(["lib/jquery.min"], function() {
 		form_Data.append("url_id", url_id);
 		
 	    $.ajax({
-	        url: RP_PHP_DIR+'Scripts/delete_onetime_url.php',
+	        url: RP_PHP_SCRIPTS_DIR+'delete_onetime_url.php',
 	        type: 'POST',
 	        data: form_Data,
 	        cache: false,
@@ -81,7 +81,7 @@ require(["lib/jquery.min"], function() {
 		form_Data.append("url_id", url_id);
 		
 	    $.ajax({
-	        url: RP_PHP_DIR+'Scripts/renew_onetime_url.php',
+	        url: RP_PHP_SCRIPTS_DIR+'renew_onetime_url.php',
 	        type: 'POST',
 	        data: form_Data,
 	        cache: false,

@@ -1,4 +1,5 @@
-<?php 
+<?php
+require_once dirname(__DIR__).'/header.php';
 require_once FP_PHP_DIR.'Core/OneTimeURL.php';
 
 if (!isset($_GET["fileID"])) {

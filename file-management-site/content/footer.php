@@ -1,4 +1,4 @@
-<link rel="stylesheet" type="text/css" href="./CSS/style_footer.css" media="screen">
+<link rel="stylesheet" type="text/css" href="<?php echo RP_CSS_DIR; ?>style_footer.css" media="screen">
 
 <footer>
 	<nav id="bottom-nav">

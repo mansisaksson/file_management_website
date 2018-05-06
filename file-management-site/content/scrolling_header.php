@@ -1,4 +1,4 @@
-<link rel="stylesheet" type="text/css" href="./CSS/style_scrolling_header.css" media="screen">
+<link rel="stylesheet" type="text/css" href="<?php echo RP_CSS_DIR; ?>style_scrolling_header.css" media="screen">
 
 <header id="scrolling-header">
 	<div id="centered-menu">

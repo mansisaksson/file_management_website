@@ -5,7 +5,7 @@ require_once FP_PHP_DIR . 'Core/UserFile.php';
 require_once FP_PHP_DIR . 'Core/OneTimeURL.php';
 
 class Database
-{         
+{
     static function addUser(User $user): bool
     {
         $conn = HelperFunctions::createConnectionToDB();

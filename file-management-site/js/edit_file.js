@@ -9,13 +9,15 @@ function togglePasswordFormEnabled()
 }
 
 require(["lib/jquery.min"], function() {
+	var returnElement = document.getElementById("php_return");
+	
 	$('#apply').on('click', function() {
-		var formElement = document.forms.namedItem("userForm");
+		var formElement = document.forms.namedItem("fileForm");
 		var form_Data = new FormData(formElement);
 		
 	    $.ajax
 	    ({
-	        url: RP_PHP_DIR+'Scripts/edit_user.php',
+	        url: RP_PHP_SCRIPTS_DIR+'edit_file.php',
 	        type: 'POST',
 	        data: form_Data,
 	        cache: false,
@@ -23,13 +25,17 @@ require(["lib/jquery.min"], function() {
 	        processData: false,
 	        
 	        success: function(php_script_response) {
-	        	document.getElementById("php_return").innerHTML = php_script_response;
-	    		alert("User Edited Successfully!");
-	    		//window.location.replace("index.php?content=user_overview.php");
+	        	returnElement.innerHTML = php_script_response;
+	    		//alert("File Edited Successfully!");
+	    		
+	    		var stay = !confirm("File Edited Successfully, go back to files?");
+	    		if (!stay) {
+	    			window.location.replace("index.php?content=file_overview.php");	
+	    		}
 	        },
 	    
 	    	error: function(jqXHR, textStatus, errorThrown) {
-	    		document.getElementById("php_return").innerHTML = jqXHR.responseText;
+	    		returnElement.innerHTML = jqXHR.responseText;
 	    		alert(errorThrown);
 	    	}
 	    });
@@ -43,11 +49,11 @@ require(["lib/jquery.min"], function() {
 		var form_Data = new FormData();
 		form_Data.append("password", password);
 		
-		var fileId = document.getElementById('user_id').value;
-		form_Data.append("user_id", fileId);
+		var fileId = document.getElementById('file_id').value;
+		form_Data.append("file_id", fileId);
 		
 	    $.ajax({
-	        url: RP_PHP_DIR+'Scripts/delete_user.php',
+	        url: RP_PHP_SCRIPTS_DIR+'delete_file.php',
 	        type: 'POST',
 	        data: form_Data,
 	        cache: false,
@@ -55,13 +61,13 @@ require(["lib/jquery.min"], function() {
 	        processData: false,
 	        
 	        success: function(php_script_response) {
-	        	document.getElementById("php_return").innerHTML = php_script_response;
-	    		alert("User Removed!");
-	    		window.location.replace("index.php");
+	        	returnElement.innerHTML = php_script_response;
+	    		alert("File Removed!");
+	    		window.location.replace("index.php?content=file_overview.php");
 	        },
 	    
 	    	error: function(jqXHR, textStatus, errorThrown) {
-	    		document.getElementById("php_return").innerHTML = jqXHR.responseText;
+	    		returnElement.innerHTML = jqXHR.responseText;
 	    		alert(errorThrown);
 	    	}
 	    });
