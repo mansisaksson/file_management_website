@@ -7,10 +7,13 @@ if (HelperFunctions::isUserLoggedIn()) {
 }
 ?>
 
-<form action="<?php echo RP_PHP_DIR."Scripts/login.php?return=".HelperFunctions::getReturnAddr(); ?>" method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data" id="user_info_form">
 	Username: <br>
 	<input type="text" name="username"> <br>
 	Password: <br>
 	<input type="password" name="password"> <br>
-	<input type="submit" name="submit"> <br>
 </form>
+<button id="loginButton">Login</button>
+<p id="php_return"></p>
+
+<script type="text/javascript" src="<?php echo RP_JS_DIR; ?>login.js"></script>
