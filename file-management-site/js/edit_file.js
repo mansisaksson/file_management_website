@@ -17,17 +17,14 @@ require(["lib/jquery.min"], function() {
 		
 	    $.ajax
 	    ({
-	        url: RP_PHP_SCRIPTS_DIR+'edit_file.php',
+	        url: RP_PHP_SCRIPTS_DIR + 'edit_file.php',
 	        type: 'POST',
 	        data: form_Data,
 	        cache: false,
 	        contentType: false,
 	        processData: false,
 	        
-	        success: function(php_script_response) {
-	        	returnElement.innerHTML = php_script_response;
-	    		//alert("File Edited Successfully!");
-	    		
+	        success: function(response) {
 	    		var stay = !confirm("File Edited Successfully, go back to files?");
 	    		if (!stay) {
 	    			window.location.replace("index.php?content=file_overview.php");	
@@ -35,8 +32,8 @@ require(["lib/jquery.min"], function() {
 	        },
 	    
 	    	error: function(jqXHR, textStatus, errorThrown) {
-	    		returnElement.innerHTML = jqXHR.responseText;
-	    		alert(errorThrown);
+				let jsonResponse = JSON.parse(jqXHR.responseText);
+	    		alert(response.message);
 	    	}
 	    });
 	});
@@ -53,22 +50,21 @@ require(["lib/jquery.min"], function() {
 		form_Data.append("file_id", fileId);
 		
 	    $.ajax({
-	        url: RP_PHP_SCRIPTS_DIR+'delete_file.php',
+	        url: RP_PHP_SCRIPTS_DIR + 'delete_file.php',
 	        type: 'POST',
 	        data: form_Data,
 	        cache: false,
 	        contentType: false,
 	        processData: false,
 	        
-	        success: function(php_script_response) {
-	        	returnElement.innerHTML = php_script_response;
+	        success: function(response) {
 	    		alert("File Removed!");
 	    		window.location.replace("index.php?content=file_overview.php");
 	        },
 	    
 	    	error: function(jqXHR, textStatus, errorThrown) {
-	    		returnElement.innerHTML = jqXHR.responseText;
-	    		alert(errorThrown);
+				let jsonResponse = JSON.parse(jqXHR.responseText);
+	    		alert(response.message);
 	    	}
 	    });
 	});

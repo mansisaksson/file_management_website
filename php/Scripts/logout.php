@@ -4,10 +4,9 @@ require_once FP_PHP_DIR . 'Core/Globals.php';
 
 $session = Session::getInstance();
 if (!isset($session)) {
-    echo "No User Logged In";
-    return;
+    exit_script("No User Logged In", 400);
 }
 
 $session->destroy();
-header("Location: ".RP_MAIN_DIR."index.php");
+exit_script("Logout Successfull");
 ?>

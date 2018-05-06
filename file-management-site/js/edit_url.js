@@ -20,15 +20,13 @@ require(["lib/jquery.min"], function() {
 	        contentType: false,
 	        processData: false,
 	        
-	        success: function(php_script_response) {
-	        	returnElement.innerHTML = php_script_response;
-	    		//alert("URL ADDED!");
+	        success: function(response) {
 	    		location.reload();
 	        },
 	    
 	    	error: function(jqXHR, textStatus, errorThrown) {
-	    		returnElement.innerHTML = jqXHR.responseText;
-	    		alert(errorThrown);
+				let jsonResponse = JSON.parse(jqXHR.responseText);
+	    		alert(response.message);
 	    	}
 	    });
 	});
@@ -54,15 +52,13 @@ require(["lib/jquery.min"], function() {
 	        contentType: false,
 	        processData: false,
 	        
-	        success: function(php_script_response) {
-	        	returnElement.innerHTML = php_script_response;
-	    		//alert("URL REMOVED!");
+	        success: function(response) {
 	    		location.reload();
 	        },
 	    
 	    	error: function(jqXHR, textStatus, errorThrown) {
-	    		returnElement.innerHTML = jqXHR.responseText;
-	    		alert(errorThrown);
+				let jsonResponse = JSON.parse(jqXHR.responseText);
+	    		alert(jsonResponse.message);
 	    	}
 	    });
 	});
@@ -88,15 +84,13 @@ require(["lib/jquery.min"], function() {
 	        contentType: false,
 	        processData: false,
 	        
-	        success: function(php_script_response) {
-	        	returnElement.innerHTML = php_script_response;
-	    		//alert("URL Renewed!");
+	        success: function(response) {
 	    		location.reload();
 	        },
 	    
 	    	error: function(jqXHR, textStatus, errorThrown) {
-	    		returnElement.innerHTML = jqXHR.responseText;
-	    		alert(errorThrown);
+				let jsonResponse = JSON.parse(jqXHR.responseText);
+	    		alert(jsonResponse.message);
 	    	}
 	    });
 	});

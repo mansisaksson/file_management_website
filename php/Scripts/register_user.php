@@ -9,28 +9,24 @@ $password_conf = $_POST['confirm_password'];
 $registration_key = $_POST['registration_key'];
 
 if ($registration_key !== "t@aU3UEE2b3b3&8Z") {
-    error_msg("Invalid Registration Key");
-    return;
+    exit_script("Invalid Registration Key", 400);
 }
 
 // Check password validity
 if ($password !== $password_conf) {
-    echo "Password missmatch";
-    return;
+    exit_script("Password missmatch", 400);
 }
 
 // Create the user
 $user = User::createNewUser(uniqid(), $username, $password);
 if (!isset($user)) {
-    error_msg("Failed to create user ".$username);
-    return;
+    exit_script("Failed to create user ".$username, 500);
 }
 
 if (HelperFunctions::createNewUserSession($user)) {
-    header("Location: ".RP_MAIN_DIR."index.php?content=file_overview.php");
+    exit_script("User Added Successfully");
 }
 else {
-    error_msg("Failed to create user session");
-    return;
+    exit_script("Failed to create user session");
 }
 ?>

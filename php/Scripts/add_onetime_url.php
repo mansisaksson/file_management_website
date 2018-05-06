@@ -6,7 +6,6 @@ $fileID = isset($_POST["file_id"]) ? $_POST["file_id"] : "ID_ERROR";
 $urlName = isset($_POST["url_name"]) ? $_POST["url_name"] : "NAME_ERROR";
 $urlLimit = isset($_POST["url_limit"]) ? $_POST["url_limit"] : 0;
 
-echo "File ID: ".$fileID."<br>";
 $file = UserFile::getFile($fileID);
 if (!isset($file)) {
     exit_script("Could not find File", 500);

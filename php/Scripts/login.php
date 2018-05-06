@@ -2,18 +2,6 @@
 require_once dirname(__DIR__).'/../header.php';
 require_once FP_PHP_DIR . 'Core/HelperFunctions.php';
 
-class LoginResponse
-{
-    public $success = false;
-    public $errorMessage = "";
-
-    function __construct(bool $success, String $errorMessage = "")
-    {
-        $this->success = $success;
-        $this->errorMessage = $errorMessage;
-    }
-}
-
 //Get form information
 $username = $_POST['username'];
 $password = $_POST['password'];
@@ -21,23 +9,18 @@ $password = $_POST['password'];
 // Retreive hashed password/validate existance of user
 $user = User::getUser($username, true);
 if (!isset($user)) {
-    echo json_encode(new LoginResponse(false, "Invalid User"));
-    return;
+    exit_script("Invalid User", 400);
 }
 
 // Validate password
 if ($user->ValidatePassword($password) !== true) {
-    echo json_encode(new LoginResponse(true));
-    return;
+    exit_script("Invalid Password", 401);
 }
 
 // Create user session
-if (HelperFunctions::createNewUserSession($user)) {
-    echo json_encode(new LoginResponse(true));
-    return;
+if (!HelperFunctions::createNewUserSession($user)) {
+    exit_script("Failed to create user session", 500);
 }
-else {
-    echo json_encode(new LoginResponse(false, "Failed to create user session"));
-    return;
-}
+
+exit_script("Login Successfull");
 ?>

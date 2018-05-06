@@ -27,38 +27,41 @@ $file_name = basename($_FILES[$fileToUpload]["name"]);
 $file = UserFile::createNewFile($sessionUser->UserID, $file_name, "DEFAULT_DESCRIPTION", $public, $password);
 $target_file_name = $file->FileID;
 
-if (tryUploadFile($fileToUpload, $target_file_name)) {
-    if (!$file->saveFileToDB()) {
-        unlink(FP_UPLOADS_DIR.$file->FileID); // Delete the file if we failed to add it to the database
-        exit_script("Failed to save file to DB", 500);
-    }
+$uploadResponse = "";
+if (!tryUploadFile($fileToUpload, $target_file_name, $uploadResponse)) {
+    exit_script($uploadResponse, 500);
 }
 
-exit_script("File uploaded successfully");
+if (!$file->saveFileToDB()) {
+    unlink(FP_UPLOADS_DIR.$file->FileID); // Delete the file if we failed to add it to the database
+    exit_script("Failed to save file to DB", 500);
+}
 
-function tryUploadFile($fileToUpload, $target_file): bool
+exit_script($uploadResponse);
+
+function tryUploadFile($fileToUpload, $target_file, &$responseMessage): bool
 {
     if (!isset($_FILES[$fileToUpload])) {
-        echo "Not a valid File" . "<br>";
+        $responseMessage = "Not a valid File";
         return false;
     }
     
     if ($_FILES[$fileToUpload]["size"] <= 0) {
-        echo "The file is too small" . "<br>";
+        $responseMessage = "The file is too small";
         return false;
     }
     
     // Check if file already exists
     if (file_exists(FP_UPLOADS_DIR . $target_file)) {
-        echo "Sorry, file already exists." . "<br>";
+        $responseMessage = "Sorry, file already exists.";
         return false;
     }
     
     if (move_uploaded_file($_FILES[$fileToUpload]["tmp_name"], FP_UPLOADS_DIR.$target_file)) {
-        echo "The file ". basename($_FILES[$fileToUpload]["name"]). " has been uploaded." . "<br>";
+        $responseMessage = "The file ". basename($_FILES[$fileToUpload]["name"]). " has been uploaded.";
     }
     else {
-        echo "Sorry, there was an error uploading your file." . "<br>";
+        $responseMessage = "Sorry, there was an error uploading your file.";
         return false;
     }
     

@@ -36,5 +36,6 @@ if (!$user->saveUserToDB()) {
 }
 
 Session::setUser($user);
-log_msg("User updated successfully!");
+
+exit_script("User updated successfully!");
 ?>

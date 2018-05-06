@@ -15,22 +15,20 @@ require(["lib/jquery.min"], function() {
 		
 	    $.ajax
 	    ({
-	        url: RP_PHP_SCRIPTS_DIR+'edit_user.php',
+	        url: RP_PHP_SCRIPTS_DIR + 'edit_user.php',
 	        type: 'POST',
 	        data: form_Data,
 	        cache: false,
 	        contentType: false,
 	        processData: false,
 	        
-	        success: function(php_script_response) {
-	        	document.getElementById("php_return").innerHTML = php_script_response;
-	    		alert("User Edited Successfully!");
-	    		//window.location.replace("index.php?content=user_overview.php");
+	        success: function(response) {
+	    		alert("User Updated Successfully!");
 	        },
 	    
 	    	error: function(jqXHR, textStatus, errorThrown) {
-	    		document.getElementById("php_return").innerHTML = jqXHR.responseText;
-	    		alert(errorThrown);
+				let jsonResponse = JSON.parse(jqXHR.responseText);
+	    		alert(jsonResponse.message);
 	    	}
 	    });
 	});
@@ -55,14 +53,13 @@ require(["lib/jquery.min"], function() {
 	        processData: false,
 	        
 	        success: function(php_script_response) {
-	        	document.getElementById("php_return").innerHTML = php_script_response;
 	    		alert("User Removed!");
 	    		window.location.replace("index.php");
 	        },
 	    
 	    	error: function(jqXHR, textStatus, errorThrown) {
-	    		document.getElementById("php_return").innerHTML = jqXHR.responseText;
-	    		alert(errorThrown);
+				let jsonResponse = JSON.parse(jqXHR.responseText);
+	    		alert(jsonResponse.message);
 	    	}
 	    });
 	});

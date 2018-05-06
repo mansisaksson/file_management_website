@@ -4,17 +4,13 @@ require_once FP_PHP_DIR . 'Core/Globals.php';
 
 $user = Session::getUser();
 if (!isset($user)) {
-    echo ("No User Logged In");
-    return;
+    exit_script("No User Logged In", 400);
 }
 
 if (!Database::removeUser($user->UserID)) {
-    echo "Failed to remove user!";
-    return;
+    exit_script("Failed to remove user!", 500);
 }
 
 $session->destroy();
-echo "User Removed";
-
-// TODO: Remove user files etc...
+exit_script("User Removed", 500);
 ?>

@@ -3,11 +3,11 @@ require_once dirname(__DIR__).'/../header.php';
 require_once FP_PHP_DIR . 'Core/Globals.php';
 
 if (!isset($_POST["user_id"])) {
-    exit_script("No User Specified", 500);
+    exit_script("No User Specified", 400);
 }
 
 if (!isset($_POST["password"])) {
-    exit_script("No Password Specified", 500);
+    exit_script("No Password Specified", 400);
 }
 
 $userID = $_POST["user_id"];

@@ -37,6 +37,6 @@ if ($changePassword === true) {
 $file->IsPublic = $newIsPublic;
 
 if ($file->saveFileToDB()) {
-    echo "File updated successfully!"."<br>";
+    exit_script("File updated successfully!");
 }
 ?>

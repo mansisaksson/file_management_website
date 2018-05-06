@@ -15,16 +15,11 @@ require(["lib/jquery.min"], function() {
             
 	        success: function(response) {
                 loginResponse = JSON.parse(response);
-                
-                if (loginResponse.success) {
-                    location.replace("index.php?content=files_overview.php")
-                }
-                else {
-                    returnElement.innerHTML = loginResponse.errorMessage;
-                }
+                location.replace("index.php?content=files_overview.php")
 	        },
 	        
 	    	error: function(jqXHR, textStatus, errorThrown) {
+				returnElement.innerHTML = loginResponse.errorMessage;
 	    		alert(errorThrown);
 	    	}
 	    });
