@@ -8,7 +8,7 @@ require_once FP_PHP_DIR . 'Core/MySQL.php';
 class GenericResponse
 {
     public $message = "";
-    public $logs = array();
+    public $serverOutput = "";
 
     function __construct() {
     }
@@ -23,9 +23,9 @@ class StaticResponse
         self::$serverResponse->message = $msg;
     }
 
-    public static function AddLog(String $Log) {
+    public static function SetServerOutput(String $serverOutput) {
         StaticResponse::EnsureValidResponse();
-        array_push(self::$serverResponse->logs, $Log);
+        self::$serverResponse->serverOutput = $serverOutput;
     }
 
     public static function GetMessage() {
@@ -44,7 +44,14 @@ class StaticResponse
 function exit_script(string $msg = "", int $errorCode = 200)
 {
     http_response_code($errorCode);
+
+    // Clean the output to ensure that we're returning valid Json
+    // However we still want to return the errors produced by the internal php code
+    StaticResponse::SetServerOutput(ob_get_contents());
+    ob_clean();
+    
     StaticResponse::SetMessage($msg);
+
     echo json_encode(StaticResponse::GetMessage());
     exit();
 }
@@ -52,21 +59,21 @@ function exit_script(string $msg = "", int $errorCode = 200)
 function error_msg($msg)
 {
     if (ERROR_ENABLED) {
-        StaticResponse::AddLog("<p id=error_msg>". $msg."</p><br>");
+        echo "<p id=error_msg>". $msg."</p><br>";
     }
 }
 
 function warning_msg($msg)
 {
     if (ERROR_ENABLED) {
-        StaticResponse::AddLog("<p id=warning_msg>". $msg."</p><br>");
+        echo "<p id=warning_msg>". $msg."</p><br>";
     }
 }
 
 function log_msg($msg)
 {
     //if (ERROR_ENABLED) {
-        StaticResponse::AddLog("<p id=log_msg>". $msg."</p><br>");
+        echo "<p id=log_msg>". $msg."</p><br>";
     //}
 }
 ?>
