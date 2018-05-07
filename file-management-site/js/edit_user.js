@@ -27,8 +27,8 @@ require(["lib/jquery.min"], function() {
 	        },
 	    
 	    	error: function(jqXHR, textStatus, errorThrown) {
-				let jsonResponse = JSON.parse(jqXHR.responseText);
-	    		alert(jsonResponse.message);
+				let response = jqXHR.responseText;
+	    		alert(response.message);
 	    	}
 	    });
 	});
@@ -58,8 +58,8 @@ require(["lib/jquery.min"], function() {
 	        },
 	    
 	    	error: function(jqXHR, textStatus, errorThrown) {
-				let jsonResponse = JSON.parse(jqXHR.responseText);
-	    		alert(jsonResponse.message);
+				let response = jqXHR.responseText;
+	    		alert(response.message);
 	    	}
 	    });
 	});

@@ -2,6 +2,9 @@
 require_once dirname(__DIR__).'/../header.php';
 require_once FP_PHP_DIR . 'Core/Globals.php';
 
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+
 $userID = isset($_POST["user_id"]) ? $_POST["user_id"] : "";
 
 $user = User::getUser($userID);

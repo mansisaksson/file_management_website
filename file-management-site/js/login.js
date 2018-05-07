@@ -14,8 +14,7 @@ require(["lib/jquery.min"], function() {
 	        processData: false,
             
 	        success: function(response) {
-                loginResponse = JSON.parse(response);
-                location.replace("index.php?content=files_overview.php")
+                location.replace("index.php?content=file_overview.php")
 	        },
 	        
 	    	error: function(jqXHR, textStatus, errorThrown) {

@@ -2,6 +2,9 @@
 require_once dirname(__DIR__) . '/../header.php';
 require_once FP_PHP_DIR . 'Core/Globals.php';
 
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+
 $fileID = "";
 if (isset($_GET["fileID"])) {
     $fileID = $_GET["fileID"];
