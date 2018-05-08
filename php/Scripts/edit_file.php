@@ -9,16 +9,16 @@ $fileID = isset($_POST["file_id"]) ? $_POST["file_id"] : "";
 
 $file = UserFile::getFile($fileID);
 if (!isset($file)) {
-    exit_script("Could not find file", 500);
+    exit_script("Could not find file", false);
 }
 
 if (!HelperFunctions::isUserLoggedIn($file->FileOwner)) {
-    exit_script("Insufficient permissions", 401);
+    exit_script("Insufficient permissions", false);
 }
 
 $newName = isset($_POST["file_name"]) ? $_POST["file_name"] : "";
 if ($newName === "") { // Quck exit if name is not valid
-    exit_script("File Name cannot be empty", 500);
+    exit_script("File Name cannot be empty", false);
 }
 
 $newDesc = isset($_POST["file_description"]) ? $_POST["file_description"] : "";
@@ -32,7 +32,7 @@ $file->FileName = $newName;
 $file->FileDescription = $newDesc;
 if ($changePassword === true) {
     if ($newPassword !== $newPassword_conf) {
-        exit_script("Pasword Missmatch", 401);
+        exit_script("Pasword Missmatch", false);
     }
     
     $file->setPassword($newPassword);

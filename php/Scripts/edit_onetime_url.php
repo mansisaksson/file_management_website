@@ -11,19 +11,19 @@ $urlLimit = isset($_GET["url_limit"]) ? $_GET["url_limit"] : 0;
 
 $url = OneTimeURL::getURL($urlID);
 if (!isset($urlID)) {
-    exit_script("Could Not Find URL", 500);
+    exit_script("Could Not Find URL", false);
 }
 
 if (!HelperFunctions::isUserLoggedIn($url->URLOwner)) {
-    exit_script("Insuffisient Permissions", 401);
+    exit_script("Insuffisient Permissions", false);
 }
 
 $url->URLName = $urlName;
 $url->UseLimit = $urlLimit;
 
 if (!$url->saveURLToDB()) {
-    exit_script("Failed to save changes to URL", 500);
+    exit_script("Failed to save changes to URL", false);
 }
 
-exit_script("URL Edited Successfully!", 200);
+exit_script("URL Edited Successfully!");
 ?>

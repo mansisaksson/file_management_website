@@ -7,7 +7,7 @@ header('Access-Control-Allow-Origin: *');
 
 $session = Session::getInstance();
 if (!isset($session)) {
-    exit_script("No User Logged In", 400);
+    exit_script("No User Logged In", false);
 }
 
 $session->destroy();

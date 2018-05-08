@@ -15,7 +15,7 @@ if (isset($_POST["fileID"])) {
 }
 
 if ($fileID === "") {
-    exit_script("No File specified", 400);
+    exit_script("No File specified", false);
 }
 
 $requireAuth = true;
@@ -33,7 +33,7 @@ if (isset($url)) {
     $url->UseCount += 1;
     if ($url->UseCount > $url->UseLimit) {
         // TODO: Do we want to remove the URL here or allow for the user to renew it?
-        exit_script("This URL is no longer valid", 401);
+        exit_script("This URL is no longer valid", false);
     }
     $url->saveURLToDB();
 }
@@ -41,12 +41,12 @@ if (isset($url)) {
 // Retrevie file information
 $userFile = UserFile::getFile($fileID);
 if (!isset($userFile)){
-    exit_script("Could Not Find File in Database", 400);
+    exit_script("Could Not Find File in Database", false);
 }
 
 // Does the file actually exist on disk?
 if (!file_exists($userFile->getPath())) {
-    exit_script("Could not find file: ".$userFile->getPath(), 400);
+    exit_script("Could not find file: ".$userFile->getPath(), false);
 }
 
 if ($requireAuth) // If this is a one-time URL then we consider the file to be public
@@ -56,7 +56,7 @@ if ($requireAuth) // If this is a one-time URL then we consider the file to be p
      */
     if ($userFile->IsPublic !== true) {
         if (!HelperFunctions::isUserLoggedIn($userFile->FileOwner)) {
-            exit_script("Insufficent Permissions", 401);
+            exit_script("Insufficent Permissions", false);
         }
     }
     
@@ -69,7 +69,7 @@ if ($requireAuth) // If this is a one-time URL then we consider the file to be p
         
         $password = $_POST["password"];
         if (!$userFile->ValidatePassword($password)) {
-            exit_script("Invalid Password", 401);
+            exit_script("Invalid Password", false);
         }
     }
 }
@@ -97,4 +97,5 @@ if ($fd)
 }
 
 fclose($fd);
+exit_script("File Transfer complete");
 ?>

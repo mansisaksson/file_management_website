@@ -23,12 +23,15 @@ require(["lib/jquery.min"], function() {
 	        processData: false,
 	        
 	        success: function(response) {
-	    		alert("User Updated Successfully!");
+				if (response.success) {
+					alert("User Updated Successfully!");
+				} else {
+					alert(response.message);
+				}
 	        },
 	    
 	    	error: function(jqXHR, textStatus, errorThrown) {
-				let response = jqXHR.responseText;
-	    		alert(response.message);
+	    		alert(errorThrown);
 	    	}
 	    });
 	});
@@ -53,13 +56,16 @@ require(["lib/jquery.min"], function() {
 	        processData: false,
 	        
 	        success: function(php_script_response) {
-	    		alert("User Removed!");
-	    		window.location.replace("index.php");
+				if (response.success) {
+					alert("User Removed!");
+					window.location.replace("index.php");
+				} else {
+					alert(response.message);
+				}
 	        },
 	    
 	    	error: function(jqXHR, textStatus, errorThrown) {
-				let response = jqXHR.responseText;
-	    		alert(response.message);
+	    		alert(errorThrown);
 	    	}
 	    });
 	});

@@ -1,6 +1,4 @@
 require(["lib/jquery.min"], function() {
-	var returnElement = document.getElementById("php_return");
-	
 	$('#addURL').on('click', function() {
 		var urlNameElem = document.getElementById("url_name");
 		var elemName = $(urlNameElem).val();
@@ -21,12 +19,15 @@ require(["lib/jquery.min"], function() {
 	        processData: false,
 	        
 	        success: function(response) {
-	    		location.reload();
+				if (response.success) {
+					location.reload();
+				} else {
+					alert(response.message);
+				}
 	        },
 	    
 	    	error: function(jqXHR, textStatus, errorThrown) {
-				let response = jqXHR.responseText;
-	    		alert(response.message);
+	    		alert(errorThrown);
 	    	}
 	    });
 	});
@@ -53,12 +54,15 @@ require(["lib/jquery.min"], function() {
 	        processData: false,
 	        
 	        success: function(response) {
-	    		location.reload();
+				if (response.success) {
+					location.reload();
+				} else {
+					alert(response.message);
+				}
 	        },
 	    
 	    	error: function(jqXHR, textStatus, errorThrown) {
-				let response = jqXHR.responseText;
-	    		alert(response.message);
+	    		alert(errorThrown);
 	    	}
 	    });
 	});
@@ -85,12 +89,15 @@ require(["lib/jquery.min"], function() {
 	        processData: false,
 	        
 	        success: function(response) {
-	    		location.reload();
+				if (response.success) {
+					location.reload();
+				} else {
+					alert(response.message);
+				}
 	        },
 	    
 	    	error: function(jqXHR, textStatus, errorThrown) {
-				let response = jqXHR.responseText;
-	    		alert(response.message);
+	    		alert(jqXHR);
 	    	}
 	    });
 	});

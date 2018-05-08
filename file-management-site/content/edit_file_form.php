@@ -10,12 +10,12 @@ if (!isset($_GET["fileID"])) {
 $fileID = $_GET["fileID"];
 $userFile = UserFile::getFile($fileID);
 if (!isset($userFile)) {
-    exit_script("Invalid file id", 500);
+    exit_script("Invalid file id", false);
 }
 
 // Check user permissions
 if (!HelperFunctions::isUserLoggedIn($userFile->FileOwner)) {
-    exit_script("Insufficient permissions", 401);
+    exit_script("Insufficient permissions", false);
 }
 ?>
 <script type="text/javascript" src="<?php echo RP_JS_DIR; ?>edit_file.js"></script>
@@ -44,8 +44,6 @@ if (!HelperFunctions::isUserLoggedIn($userFile->FileOwner)) {
 
 <input type="button" id="apply" value="Apply Changes" /> <br><br>
 <input type="button" id="delete" value="Delete File" /> 
-
-<p id="php_return"></p>
 
 <?php 
 require_once FP_CONTENT_DIR.'edit_onetime_urls.php';

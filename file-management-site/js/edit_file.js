@@ -9,8 +9,6 @@ function togglePasswordFormEnabled()
 }
 
 require(["lib/jquery.min"], function() {
-	var returnElement = document.getElementById("php_return");
-	
 	$('#apply').on('click', function() {
 		var formElement = document.forms.namedItem("fileForm");
 		var form_Data = new FormData(formElement);
@@ -25,15 +23,18 @@ require(["lib/jquery.min"], function() {
 	        processData: false,
 	        
 	        success: function(response) {
-	    		var stay = !confirm("File Edited Successfully, go back to files?");
-	    		if (!stay) {
-	    			window.location.replace("index.php?content=file_overview.php");	
-	    		}
+				if (response.success) {
+					var stay = !confirm("File Edited Successfully, go back to files?");
+					if (!stay) {
+						window.location.replace("index.php?content=file_overview.php");	
+					}
+				} else {
+					alert(response.message);
+				}
 	        },
 	    
 	    	error: function(jqXHR, textStatus, errorThrown) {
-				let response = jqXHR.responseText;
-	    		alert(response.message);
+	    		alert(errorThrown);
 	    	}
 	    });
 	});
@@ -58,13 +59,16 @@ require(["lib/jquery.min"], function() {
 	        processData: false,
 	        
 	        success: function(response) {
-	    		alert("File Removed!");
-	    		window.location.replace("index.php?content=file_overview.php");
+				if (response.success) {
+					alert("File Removed!");
+					window.location.replace("index.php?content=file_overview.php");
+				} else {
+					returnElement.innerHTML = response.message;
+				}
 	        },
 	    
 	    	error: function(jqXHR, textStatus, errorThrown) {
-				let response = jqXHR.responseText;
-	    		alert(response.message);
+	    		alert(errorThrown);
 	    	}
 	    });
 	});

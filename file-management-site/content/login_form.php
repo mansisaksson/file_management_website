@@ -16,4 +16,5 @@ if (HelperFunctions::isUserLoggedIn()) {
 <button id="loginButton">Login</button>
 <p id="php_return"></p>
 
-<script type="text/javascript" src="<?php echo RP_JS_DIR; ?>login.js"></script>
+<!-- Hack since this script was included twice -->
+<!--<script type="text/javascript" src="<?php echo RP_JS_DIR; ?>login.js"></script>-->

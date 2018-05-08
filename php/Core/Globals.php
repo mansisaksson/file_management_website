@@ -4,55 +4,50 @@ require_once FP_PHP_DIR . 'Core/Session.php';
 require_once FP_PHP_DIR . 'Core/HelperFunctions.php';
 require_once FP_PHP_DIR . 'Core/Database.php';
 require_once FP_PHP_DIR . 'Core/MySQL.php';
+require_once FP_PHP_DIR . 'Core/Patterns.php';
 
-class GenericResponse
+class ServerResponse extends Singleton
 {
-    public $message = "";
-    public $serverOutput = "";
+    private $content = array();
 
-    function __construct() {
+    public function __set($key, $value)
+    {
+        $this->content[$key] = $value;
+    }
+
+    public function __get($value)
+    {
+        return $this->content[$value];
+    }
+
+    public function getJson(): string {
+        return json_encode($this->content);
     }
 }
 
-class StaticResponse
+function exit_script(string $msg = "", bool $success = true, $payload = null)
 {
-    private static $serverResponse;
-    
-    public static function SetMessage(String $msg) {
-        StaticResponse::EnsureValidResponse();
-        self::$serverResponse->message = $msg;
-    }
+    /*
+    * We no longer handle HTTP level errors due to this reason:
+    * "I would say it is better to be explicit about the separation of protocols. Let the HTTP server and the web browser do their own thing, and let the app do its own thing."
+    */
+    //http_response_code($errorCode);
 
-    public static function SetServerOutput(String $serverOutput) {
-        StaticResponse::EnsureValidResponse();
-        self::$serverResponse->serverOutput = $serverOutput;
-    }
-
-    public static function GetMessage() {
-        StaticResponse::EnsureValidResponse();
-        return self::$serverResponse;
-    }
-
-    private static function EnsureValidResponse() {
-        if (!isset(self::$serverResponse)) {
-            self::$serverResponse = new GenericResponse();
-        }
-    }
-}
-
-
-function exit_script(string $msg = "", int $errorCode = 200)
-{
-    http_response_code($errorCode);
-
-    // Clean the output to ensure that we're returning valid Json
-    // However we still want to return the errors produced by the internal php code
-    StaticResponse::SetServerOutput(ob_get_contents());
+    /* 
+     * Clean the output to ensure that we're returning valid Json,
+     * however we still want to return the errors produced by the internal php code 
+     */
+    //ServerResponse::Instance()->serverOutput = ob_get_contents();
     ob_clean();
     
-    StaticResponse::SetMessage($msg);
+    ServerResponse::Instance()->success = $success;
+    ServerResponse::Instance()->message = $msg;
 
-    echo json_encode(StaticResponse::GetMessage());
+    if ($payload !== null) {
+        ServerResponse::Instance()->payload = $payload;
+    }
+
+    echo ServerResponse::Instance()->getJson();
     exit();
 }
 

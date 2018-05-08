@@ -1,6 +1,4 @@
 require(["lib/jquery.min"], function() {
-	var returnElement = document.getElementById("php_return");
-	
 	$(':file').on('change', function() {
 		var file = this.files[0];
 	    if (file.size < 1) {
@@ -41,13 +39,15 @@ require(["lib/jquery.min"], function() {
 	        },
 	        
 	        success: function(php_script_response) {
-	        	returnElement.innerHTML = php_script_response;
-	            alert("File uploaded successfully");
-	            location.reload();
+				if (response.success) {
+					alert("File uploaded successfully");
+					location.reload();
+				} else {
+					alert(response.message);
+				}
 	        },
 	        
 	    	error: function(jqXHR, textStatus, errorThrown) {
-	    		returnElement.innerHTML = jqXHR.responseText;
 	    		alert(errorThrown);
 	    	}
 	    });

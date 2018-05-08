@@ -7,12 +7,12 @@ header('Access-Control-Allow-Origin: *');
 
 $sessionUser = Session::getUser();
 if (!isset($sessionUser)) {
-    exit_script("No User Logged In", 401);
+    exit_script("No User Logged In", false);
 }
 
 $fileToUpload = "fileToUpload";
 if (!isset($_FILES[$fileToUpload])){
-    exit_script("Invalid File", 400);
+    exit_script("Invalid File", false);
 }
 
 //Get form information
@@ -22,7 +22,7 @@ $public = isset($_POST['isPublic']);
 
 // Check password validity
 if ($password !== $password_conf){
-    exit_script("Password missmatch", 401);
+    exit_script("Password missmatch", false);
 }
 
 $file_name = basename($_FILES[$fileToUpload]["name"]);
@@ -32,12 +32,12 @@ $target_file_name = $file->FileID;
 
 $uploadResponse = "";
 if (!tryUploadFile($fileToUpload, $target_file_name, $uploadResponse)) {
-    exit_script($uploadResponse, 500);
+    exit_script($uploadResponse, false);
 }
 
 if (!$file->saveFileToDB()) {
     unlink(FP_UPLOADS_DIR.$file->FileID); // Delete the file if we failed to add it to the database
-    exit_script("Failed to save file to DB", 500);
+    exit_script("Failed to save file to DB", false);
 }
 
 exit_script($uploadResponse);

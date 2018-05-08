@@ -7,13 +7,13 @@ header('Access-Control-Allow-Origin: *');
 
 $user = Session::getUser();
 if (!isset($user)) {
-    exit_script("No User Logged In", 400);
+    exit_script("No User Logged In", false);
 }
 
 if (!Database::removeUser($user->UserID)) {
-    exit_script("Failed to remove user!", 500);
+    exit_script("Failed to remove user!", false);
 }
 
 $session->destroy();
-exit_script("User Removed", 500);
+exit_script("User Removed");
 ?>

@@ -12,24 +12,24 @@ $password_conf = $_POST['confirm_password'];
 $registration_key = $_POST['registration_key'];
 
 if ($registration_key !== "t@aU3UEE2b3b3&8Z") {
-    exit_script("Invalid Registration Key", 400);
+    exit_script("Invalid Registration Key", false);
 }
 
 // Check password validity
 if ($password !== $password_conf) {
-    exit_script("Password missmatch", 400);
+    exit_script("Password missmatch", false);
 }
 
 // Create the user
 $user = User::createNewUser(uniqid(), $username, $password);
 if (!isset($user)) {
-    exit_script("Failed to create user ".$username, 500);
+    exit_script("Failed to create user ".$username, false);
 }
 
 if (HelperFunctions::createNewUserSession($user)) {
     exit_script("User Added Successfully");
 }
 else {
-    exit_script("Failed to create user session");
+    exit_script("Failed to create user session", false);
 }
 ?>
