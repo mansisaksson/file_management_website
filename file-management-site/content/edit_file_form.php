@@ -10,12 +10,12 @@ if (!isset($_GET["fileID"])) {
 $fileID = $_GET["fileID"];
 $userFile = UserFile::getFile($fileID);
 if (!isset($userFile)) {
-    exit_script("Invalid file id", false);
+    die("Invalid file id");
 }
 
 // Check user permissions
 if (!HelperFunctions::isUserLoggedIn($userFile->FileOwner)) {
-    exit_script("Insufficient permissions", false);
+    die("Insufficient permissions");
 }
 ?>
 <script type="text/javascript" src="<?php echo RP_JS_DIR; ?>edit_file.js"></script>

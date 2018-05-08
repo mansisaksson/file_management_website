@@ -2,9 +2,6 @@
 require_once dirname(__DIR__).'/../header.php';
 require_once FP_PHP_DIR . 'Core/Globals.php';
 
-header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
-
 if (!isset($_POST["file_id"])) {
     exit_script("No File Specified", false);
 }
