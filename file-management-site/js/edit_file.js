@@ -63,7 +63,7 @@ require(["lib/jquery.min"], function() {
 					alert("File Removed!");
 					window.location.replace("index.php?content=file_overview.php");
 				} else {
-					returnElement.innerHTML = response.message;
+					response.innerHTML = response.message;
 				}
 	        },
 	    
