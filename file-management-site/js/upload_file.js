@@ -38,7 +38,7 @@ require(["lib/jquery.min"], function() {
 	            return myXhr;
 	        },
 	        
-	        success: function(php_script_response) {
+	        success: function(response) {
 				if (response.success) {
 					alert("File uploaded successfully");
 					location.reload();
