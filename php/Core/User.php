@@ -39,7 +39,7 @@ class User
     
     public function setPassword($password): bool
     {
-        if ($userName === "") {
+        if ($password === "") {
             log_msg("Password cannot be empty");
             return false;
         }
