@@ -4,6 +4,7 @@ require_once dirname(__DIR__) . '/../header.php';
 class SQL
 {
     // MySQL
+    // These are the default development settings
     const SERVERNAME = "localhost";
     const USERNAME = "mans_webpage";
     const PASSWORD = "3@6#JQDHwX3x^*6";

@@ -8,7 +8,9 @@ $password = $_POST['password'];
 $password_conf = $_POST['confirm_password'];
 $registration_key = $_POST['registration_key'];
 
-if ($registration_key !== "t@aU3UEE2b3b3&8Z") {
+$key = file_get_contents(FP_FMSITE_DIR.'/registration.key');
+
+if ($registration_key !== $key) {
     exit_script("Invalid Registration Key", false);
 }
 
