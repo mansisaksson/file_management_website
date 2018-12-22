@@ -1,0 +1,1 @@
+docker build %0/../ -t file-site

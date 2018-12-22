@@ -1,4 +1,4 @@
-const serverRootFolder = "/ws/";
+const serverRootFolder = "/";
 const siteRootFolder = "file-management-site";
 const phpScriptsFolderName = 'php/Scripts/';
 const jsFolderName = 'js/';
