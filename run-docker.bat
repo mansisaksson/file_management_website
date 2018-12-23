@@ -1,1 +1,1 @@
-docker run -p 80:80 -v %0/../uploads/:/var/www/html/uploads/ file-site
+docker run -p 80:80 -v %0/../:/var/www/html/ file-site

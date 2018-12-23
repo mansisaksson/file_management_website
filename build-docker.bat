@@ -1,1 +1,1 @@
-docker build %0/../ -t file-site
+docker build %0/../ -t file-site:latest

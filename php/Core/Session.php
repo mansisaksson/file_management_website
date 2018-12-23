@@ -55,7 +55,7 @@ class Session
             self::$instance = new self;
         }
         
-        self::$instance->startSession();
+        @self::$instance->startSession(); //@ supresses a warning
         
         return self::$instance;
     }
