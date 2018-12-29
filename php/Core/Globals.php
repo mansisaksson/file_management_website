@@ -38,7 +38,10 @@ function exit_script(string $msg = "", bool $success = true, $payload = null)
      * however we still want to return the errors produced by the internal php code 
      */
     ServerResponse::Instance()->serverOutput = ob_get_contents();
-    ob_clean();
+
+    if (ob_get_contents()) {
+        ob_clean();
+    }
     
     ServerResponse::Instance()->success = $success;
     ServerResponse::Instance()->message = $msg;
