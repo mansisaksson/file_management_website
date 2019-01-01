@@ -1,1 +1,1 @@
-docker build %0/../ -t file-site:latest
+docker build %0/../ -t dockerregistry.mansisaksson.com/file-site:latest
