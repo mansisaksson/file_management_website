@@ -5,7 +5,7 @@ class SQL
 {
     // MySQL
     // These are the default development settings
-    const SERVERNAME = "192.168.10.216:3306";
+    const SERVERNAME = "192.168.10.104:3306";
     const USERNAME = "mans_webpage";
     const PASSWORD = "3@6#JQDHwX3x^*6";
     
