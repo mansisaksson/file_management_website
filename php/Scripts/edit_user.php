@@ -18,7 +18,7 @@ $changePassword = isset($_POST["change_password"]);
 $newPassword = isset($_POST["new_password"]) ? $_POST["new_password"] : "";
 $newPassword_conf = isset($_POST["password_confirm"]) ? $_POST["password_confirm"] : "";
 
-// Update file
+// Update user
 if (!$user->setUserName($newName)) {
     exit_script("Invalid User Name: ", false);
 }

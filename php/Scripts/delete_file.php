@@ -34,4 +34,6 @@ if (!$user->ValidatePassword($password)) {
 if (!$file->deleteFile()) {
     exit_script("Failed to remove file", false);
 }
+
+exit_script("File deleted!");
 ?>

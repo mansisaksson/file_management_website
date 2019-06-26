@@ -42,6 +42,8 @@ function exit_script(string $msg = "", bool $success = true, $payload = null)
     if (ob_get_contents()) {
         ob_clean();
     }
+
+    ob_end_flush();
     
     ServerResponse::Instance()->success = $success;
     ServerResponse::Instance()->message = $msg;
