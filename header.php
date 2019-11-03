@@ -4,7 +4,6 @@ $phpScriptsFolderName = 'php/';
 $uploadsFolderName = 'uploads/';
 
 $fmSiteFolderName = 'file-management-site/';
-$ptSiteFolderName = 'portfolio-site/';
 
 // *** Begin Main Dirs
 define('FP_MAIN_DIR', dirname(__FILE__) . '/');
@@ -21,8 +20,8 @@ define('RP_UPLOADS_DIR', RP_MAIN_DIR . $uploadsFolderName);
 define('FP_FMSITE_DIR', FP_MAIN_DIR . $fmSiteFolderName);
 define('RP_FMSITE_DIR', RP_MAIN_DIR . $fmSiteFolderName);
 
-define('FP_PTSITE_DIR', FP_MAIN_DIR . $ptSiteFolderName);
-define('RP_PTSITE_DIR', RP_MAIN_DIR . $ptSiteFolderName);
+// could add more sites here...
+
 // *** End Sites
 
 define('ERROR_ENABLED', true);
